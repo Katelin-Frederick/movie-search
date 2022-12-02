@@ -1,12 +1,8 @@
 import React from 'react'
 import { Field, ErrorMessage, FieldProps } from 'formik'
+import Label from '../Label/Label'
 import Option from './Option'
 import TextError from '../TextError'
-
-type OptionType = {
-  value: string,
-  label: string,
-}
 
 type DropdownPropTypes = {
   label: string,
@@ -16,13 +12,13 @@ type DropdownPropTypes = {
 const Dropdown = ({ label, name, options, ...rest }: DropdownPropTypes) => {
   return (
     <div>
-      <label htmlFor={name}>{label}</label>
+      <Label name={name} label={label} />
 
       <Field name={name}>
         {({ field }: FieldProps) => (
           <div>
             <select
-              className='border border-gray-700 rounded-sm px-2 py-2'
+              className='border border-gray-700 rounded-sm px-2 py-2 w-full md:w-auto min-w-[200px] mt-2'
               {...rest}
               {...field}
             >

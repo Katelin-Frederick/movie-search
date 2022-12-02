@@ -1,20 +1,22 @@
 import { Field, ErrorMessage, FieldProps } from 'formik'
+import Label from '../Label/Label'
 import TextError from '../TextError'
 
 type TextFieldPropTypes = {
+  className?: string
   label: string
 } & React.ComponentProps<'input'>
 
-const TextField = ({ label, name, ...rest }: TextFieldPropTypes) => {
+const TextField = ({ className, label, name, ...rest }: TextFieldPropTypes) => {
   return (
-    <div>
-      <label htmlFor={name}>{label}</label>
+    <div className={className}>
+      <Label name={name} label={label} />
 
       <Field name={name}>
         {({ field }: FieldProps) => (
           <div>
             <input
-              className='border border-gray-700 rounded-sm px-2 py-2'
+              className='border border-gray-700 rounded-sm px-2 py-2 w-full md:w-auto mt-2'
               {...rest}
               {...field}
             />
