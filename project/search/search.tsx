@@ -6,6 +6,7 @@ import Dropdown from '../../components/Dropdown'
 import TextField from '../../components/TextField'
 import validationSchema from './validation/validationSchema'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const Search = () => {
   const [results, setResults] = useState([])
@@ -114,14 +115,20 @@ const Search = () => {
               <ul>
                 {results.map((item, index) => (
                   <li key={index} className="text-white">
-                    <p>{item.Title}</p>
+                    <Link href={`/details/${item.imdbID}`}>
+                      <p>{item.Title}</p>
 
-                    <Image
-                      alt='user profile picture'
-                      height={444}
-                      src={item.Poster}
-                      width={300}
-                    />
+                      <div>
+                        <Image
+                          alt='user profile picture'
+                          src={item.Poster}
+                          width="0"
+                          height="0"
+                          sizes="100vw"
+                          style={{ width: '300px', height: 'auto' }}
+                        />
+                      </div>
+                    </Link>
                   </li>
                 ))}
               </ul>
