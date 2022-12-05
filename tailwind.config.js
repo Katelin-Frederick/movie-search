@@ -11,7 +11,9 @@ module.exports = {
     },
     extend: {
       colors: {
-        gray: '#3d3d3c'
+        gray: '#333333',
+        ['light-gray']: '#4d4d4d',
+        ['lightest-gray']: '#bcc0c4',
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],

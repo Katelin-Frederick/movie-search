@@ -1,4 +1,4 @@
-import { Router, useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import Button from '../../../../components/Button'
 import Image from 'next/image'
 
