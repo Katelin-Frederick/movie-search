@@ -4,7 +4,9 @@ const details = ({ details }) => {
   console.log('details', details)
 
   return (
-    <div>details</div>
+    <div>
+      {details.Title}
+    </div>
   )
 }
 

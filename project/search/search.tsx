@@ -1,12 +1,9 @@
 import { useState } from 'react'
 import axios from 'axios'
 import { Formik, Form } from 'formik'
-import Button from '../../components/Button'
-import Dropdown from '../../components/Dropdown'
-import TextField from '../../components/TextField'
 import validationSchema from './validation/validationSchema'
-import Image from 'next/image'
-import Link from 'next/link'
+import SearchForm from './structure/SearchForm'
+import MovieList from './structure/MovieList/MovieList'
 
 const Search = () => {
   const [results, setResults] = useState([])
@@ -49,89 +46,14 @@ const Search = () => {
         validateOnChange={false}
         onSubmit={(values) => onSubmit(values)}
       >
-        {({ resetForm }) => (
+        {() => (
           <Form noValidate>
             <h1 className='text-center text-yellow-400 text-5xl'>Movie Search</h1>
 
-            <div className="flex justify-center items-center mt-14">
-              <div className="bg-gray rounded-lg p-4 md:p-8 w-full md:w-auto shadow-xl">
-                <div className="flex flex-col md:flex-row justify-evenly">
-                  <TextField
-                    className="md:pr-3 mb-5 md:mb-0"
-                    label="Search Term"
-                    name="searchTerm"
-                    maxLength={30}
-                    placeholder="Enter Search Term"
-                  />
-
-                  <TextField
-                    className="md:pr-3 mb-5 md:mb-0"
-                    label="Year"
-                    name="year"
-                    maxLength={4}
-                    placeholder="Enter Year"
-                  />
-
-                  <Dropdown
-                    label="Search Type"
-                    name="searchType"
-                    options={[
-                      {
-                        value: '',
-                        label: 'Select An Option',
-                        disabled: true,
-                      },
-                      {
-                        value: 'movie',
-                        label: 'Movie'
-                      },
-                      {
-                        value: 'series',
-                        label: 'Series'
-                      },
-                    ]}
-                  />
-                </div>
-
-                <div className='flex flex-col md:flex-row justify-center items-center mt-5'>
-                  <Button
-                    onClick={() => resetForm()}
-                    type='button'
-                  >
-                    Reset
-                  </Button>
-
-                  <Button
-                    className="mt-5 md:mt-0 md:ml-4"
-                    type='submit'
-                  >
-                    Search
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <SearchForm />
 
             {results.length > 0 && (
-              <ul>
-                {results.map((item, index) => (
-                  <li key={index} className="text-white">
-                    <Link href={`/details/${item.imdbID}`}>
-                      <p>{item.Title}</p>
-
-                      <div>
-                        <Image
-                          alt='user profile picture'
-                          src={item.Poster}
-                          width="0"
-                          height="0"
-                          sizes="100vw"
-                          style={{ width: '300px', height: 'auto' }}
-                        />
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <MovieList results={results} />
             )}
           </Form>
         )}

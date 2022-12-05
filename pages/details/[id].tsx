@@ -2,7 +2,9 @@ import Details from '../../project/details/details'
 
 const Home = ({ details }) => {
   return (
-    <Details details={details} />
+    <div className='container mx-auto'>
+      <Details details={details} />
+    </div>
   )
 }
 
