@@ -3,7 +3,7 @@ import Button from '../../../components/Button'
 import Dropdown from '../../../components/Dropdown'
 import TextField from '../../../components/TextField'
 
-const SearchForm = () => {
+const SearchForm = ({ setResults }) => {
   const { resetForm } = useFormikContext()
 
   return (
@@ -49,7 +49,11 @@ const SearchForm = () => {
 
         <div className='flex flex-col md:flex-row justify-center items-center mt-5'>
           <Button
-            onClick={() => resetForm()}
+            variant='secondary'
+            onClick={() => {
+              resetForm()
+              setResults([])
+            }}
             type='button'
           >
             Reset

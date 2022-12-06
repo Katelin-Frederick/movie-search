@@ -1,10 +1,10 @@
 export default async function handler(req, res) {
   const {
-    query: { searchTerm, searchType, year }
+    query: { page, searchTerm, searchType, year }
   } = req;
 
   try {
-    const response = await fetch(`https://www.omdbapi.com/?s=${searchTerm}&y=${year}&type=${searchType}&apikey=${process.env.OMDBI_KEY}`)
+    const response = await fetch(`https://www.omdbapi.com/?page=${page}&s=${searchTerm}&y=${year}&type=${searchType}&apikey=${process.env.OMDBI_KEY}`)
       .then(response => response.json())
       .then(data => data.Search)
 

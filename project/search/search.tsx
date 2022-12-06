@@ -7,6 +7,7 @@ import MovieList from './structure/MovieList/MovieList'
 
 const Search = () => {
   const [results, setResults] = useState([])
+  const [page, setPage] = useState(1)
 
   const initialValues = {
     searchType: '',
@@ -20,6 +21,7 @@ const Search = () => {
     try {
       axios.get('/api/search', {
         params: {
+          page,
           searchType,
           searchTerm,
           year,
@@ -50,7 +52,7 @@ const Search = () => {
           <Form noValidate>
             <h1 className='text-center text-yellow-400 text-5xl'>Movie Search</h1>
 
-            <SearchForm />
+            <SearchForm setResults={setResults} />
 
             {results.length > 0 && (
               <MovieList results={results} />

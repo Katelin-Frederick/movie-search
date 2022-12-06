@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
-import Button from '../../components/Button'
 import Image from 'next/image'
+import Link from 'next/link'
+import Button from '../../components/Button'
 
 const Details = ({ details }) => {
   const router = useRouter()
@@ -101,13 +102,28 @@ const Details = ({ details }) => {
         </div>
       </div>
 
-      <Button
-        type='button'
-        className="text-black"
-        onClick={() => router.push('/')}
-      >
-        Back
-      </Button>
+      <div className='mt-8'>
+        <Button
+          onClick={() => router.push('/')}
+          variant='secondary'
+          type='button'
+        >
+          Back
+        </Button>
+
+        <a
+          className="mt-5 md:mt-0 md:ml-4"
+          href={`http://imdb.com/title/${details.imdbID}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button
+            type='submit'
+          >
+            View On IMDb
+          </Button>
+        </a>
+      </div>
     </div>
   )
 }

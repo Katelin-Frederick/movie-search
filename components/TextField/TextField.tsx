@@ -16,7 +16,7 @@ const TextField = ({ className, label, name, ...rest }: TextFieldPropTypes) => {
         {({ field }: FieldProps) => (
           <div>
             <input
-              className='border border-gray-700 rounded-sm px-2 py-2 w-full md:w-auto mt-2'
+              className='border border-gray-700 rounded-md px-2 py-2 w-full md:w-auto mt-2'
               {...rest}
               {...field}
             />
