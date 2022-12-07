@@ -9,6 +9,10 @@
   padding: 5px 10px;
 }
 
+.paginationListItem.selected {
+  pointer-events: none;
+}
+
 .paginationListItem.selected,
 .paginationListItem:hover,
 .paginationNext:hover,
@@ -25,11 +29,16 @@
 }
 
 .disabled.paginationNext,
+.disabled.paginationNext:hover,
 .disabled.paginationNext .paginationNextLink,
+.disabled.paginationNext .paginationNextLink:hover,
 .disabled.paginationPrevious,
-.disabled.paginationPrevious .paginationPreviousLink {
+.disabled.paginationPrevious:hover,
+.disabled.paginationPrevious .paginationPreviousLink,
+.disabled.paginationPrevious .paginationPreviousLink:hover {
   color: #bcc0c4;
   cursor: not-allowed;
+  border: none;
 }
 
 @media (max-width: 640px) {
