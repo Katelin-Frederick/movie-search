@@ -6,7 +6,9 @@ export default async function handler(req, res) {
   try {
     const response = await fetch(`https://www.omdbapi.com/?page=${page}&s=${searchTerm}&y=${year}&type=${searchType}&apikey=${process.env.OMDBI_KEY}`)
       .then(response => response.json())
-      .then(data => data.Search)
+      .then(data => {
+        return { results: data.Search, totalResults: data.totalResults }
+      })
 
     res.status(200).json(response)
 

@@ -4,10 +4,11 @@ import { Formik, Form } from 'formik'
 import validationSchema from './validation/validationSchema'
 import SearchForm from './structure/SearchForm'
 import MovieList from './structure/MovieList/MovieList'
+import Pagination from '../../components/Pagination'
 
 const Search = () => {
   const [results, setResults] = useState([])
-  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
 
   const initialValues = {
     searchType: '',
@@ -15,7 +16,7 @@ const Search = () => {
     year: '',
   }
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values, page) => {
     const { searchTerm, searchType, year } = values
 
     try {
@@ -28,8 +29,8 @@ const Search = () => {
         },
       })
         .then(function (response) {
-          console.log('res', response.data)
-          setResults(response.data)
+          setResults(response.data.results)
+          setTotalPages(Math.ceil(response.data.totalResults / 10))
         })
         .catch(function (error) {
           console.error(error)
@@ -46,16 +47,24 @@ const Search = () => {
         validationSchema={validationSchema}
         validateOnBlur={false}
         validateOnChange={false}
-        onSubmit={(values) => onSubmit(values)}
+        onSubmit={(values) => onSubmit(values, 1)}
       >
-        {() => (
+        {({ values }) => (
           <Form noValidate>
             <h1 className='text-center text-yellow-400 text-5xl'>Movie Search</h1>
 
             <SearchForm setResults={setResults} />
 
             {results.length > 0 && (
-              <MovieList results={results} />
+              <>
+                <MovieList results={results} />
+
+                <Pagination
+                  className="my-12"
+                  totalPages={totalPages}
+                  onPageChange={(e) => onSubmit(values, e.selected + 1)}
+                />
+              </>
             )}
           </Form>
         )}
