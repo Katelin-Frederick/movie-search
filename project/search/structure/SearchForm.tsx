@@ -1,9 +1,13 @@
+import { useContext } from 'react'
 import { useFormikContext } from 'formik'
 import Button from '../../../components/Button'
 import Dropdown from '../../../components/Dropdown'
 import TextField from '../../../components/TextField'
+import SiteContext from '../../../context/SiteContext/SiteContext'
 
-const SearchForm = ({ setResults }) => {
+const SearchForm = () => {
+  const { siteDispatch } = useContext(SiteContext)
+
   const { resetForm } = useFormikContext()
 
   return (
@@ -52,7 +56,10 @@ const SearchForm = ({ setResults }) => {
             variant='secondary'
             onClick={() => {
               resetForm()
-              setResults([])
+              siteDispatch({
+                type: 'UPDATE_RESULTS',
+                payload: []
+              })
             }}
             type='button'
           >

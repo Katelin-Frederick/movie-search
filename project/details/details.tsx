@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import Link from 'next/link'
 import Button from '../../components/Button'
 
 const Details = ({ details }) => {
@@ -13,7 +12,7 @@ const Details = ({ details }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:grid-cols-3">
         <Image
-          alt='user profile picture'
+          alt="user profile picture"
           src={details.Poster}
           width="0"
           height="0"
@@ -25,62 +24,62 @@ const Details = ({ details }) => {
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Genre: </span>{details.Genre}
+            <span className="text-white font-bold">Genre: </span>{details.Genre}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Actors: </span>{details.Actors}
+            <span className="text-white font-bold">Actors: </span>{details.Actors}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Awards: </span>{details.Awards}
+            <span className="text-white font-bold">Awards: </span>{details.Awards}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>BoxOffice: </span>{details.BoxOffice}
+            <span className="text-white font-bold">BoxOffice: </span>{details.BoxOffice}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Country: </span>{details.Country}
+            <span className="text-white font-bold">Country: </span>{details.Country}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Director: </span>{details.Director}
+            <span className="text-white font-bold">Director: </span>{details.Director}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Language: </span>{details.Language}
+            <span className="text-white font-bold">Language: </span>{details.Language}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Rated: </span>{details.Rated}
+            <span className="text-white font-bold">Rated: </span>{details.Rated}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Released: </span>{details.Released}
+            <span className="text-white font-bold">Released: </span>{details.Released}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Runtime: </span>{details.Runtime}
+            <span className="text-white font-bold">Runtime: </span>{details.Runtime}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Type: </span>{details.Type}
+            <span className="text-white font-bold">Type: </span>{details.Type}
           </li>
           <li
             className="px-4 py-3 border-2 border-t-0 border-light-gray"
           >
-            <span className='text-white font-bold'>Writer: </span>{details.Writer}
+            <span className="text-white font-bold">Writer: </span>{details.Writer}
           </li>
         </ul>
 
@@ -95,18 +94,18 @@ const Details = ({ details }) => {
                 key={index}
                 className="px-4 py-3 border-2 border-t-0 border-light-gray bg-gray w-full text-yellow-400"
               >
-                <span className='text-white font-bold'>{item.Source} </span>{item.Value}
+                <span className="text-white font-bold">{item.Source} </span>{item.Value}
               </li>
             ))}
           </ul>
         </div>
       </div>
 
-      <div className='mt-8'>
+      <div className="mt-8">
         <Button
           onClick={() => router.push('/')}
-          variant='secondary'
-          type='button'
+          variant="secondary"
+          type="button"
         >
           Back
         </Button>
@@ -118,7 +117,7 @@ const Details = ({ details }) => {
           rel="noopener noreferrer"
         >
           <Button
-            type='submit'
+            type="submit"
           >
             View On IMDb
           </Button>

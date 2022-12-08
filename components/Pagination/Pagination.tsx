@@ -7,10 +7,11 @@ type PaginationPropTypes = {
   onPageChange: (selectedItem: {
     selected: number;
   }) => void,
+  page: number,
   totalPages: number,
 }
 
-const Pagination = ({ className, onPageChange, totalPages }: PaginationPropTypes) => {
+const Pagination = ({ className, onPageChange, page, totalPages }: PaginationPropTypes) => {
   useEffect(() => {
     const paginationBreaks = document.querySelectorAll('.paginationBreak')
     const paginationBreakLinks = document.querySelectorAll('.paginationBreak a')
@@ -26,6 +27,7 @@ const Pagination = ({ className, onPageChange, totalPages }: PaginationPropTypes
         'paginationList font-rockSalt flex flex-row justify-center items-center text-xl',
         className
       )}
+      forcePage={page}
       marginPagesDisplayed={1}
       nextClassName="paginationNext"
       nextLinkClassName="paginationNextLink"

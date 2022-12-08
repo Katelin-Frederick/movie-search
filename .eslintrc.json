@@ -1,3 +1,137 @@
 {
-  "extends": "next/core-web-vitals"
-}
+  "env": {
+  "browser": true,
+  "es6": true
+  },
+  "extends": [
+  "plugin:react/recommended",
+  "airbnb",
+  "airbnb-typescript",
+  "eslint:recommended",
+  "plugin:@typescript-eslint/eslint-recommended",
+  "plugin:@typescript-eslint/recommended"
+  ],
+  "globals": {
+  "Atomics": "readonly",
+  "SharedArrayBuffer": "readonly",
+  "React": "writable",
+  "it": "readonly",
+  "describe": "readonly",
+  "cy": "readonly",
+  "Cypress": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+  "project": "./tsconfig.json",
+  "ecmaFeatures": {
+  "jsx": true
+  },
+  "ecmaVersion": 11,
+  "sourceType": "module"
+  },
+  "plugins": [
+  "react",
+  "prettier",
+  "@typescript-eslint"
+  ],
+  "rules": {
+  "react/react-in-jsx-scope": "off",
+  "react/jsx-filename-extension": [
+  1,
+  {
+  "extensions": [
+  ".js",
+  ".jsx",
+  ".ts",
+  ".tsx"
+  ]
+  }
+  ],
+  "comma-dangle": "off",
+  "@typescript-eslint/comma-dangle": "off",
+  "func-names": "off",
+  "function-paren-newline": "off",
+  "implicit-arrow-linebreak": "off",
+  "import/no-dynamic-require": "off",
+  "indent": "off",
+  "jsx-a11y/click-events-have-key-events": "off",
+  "jsx-a11y/no-noninteractive-element-interactions": "off",
+  "jsx-a11y/no-noninteractive-tabindex": "off",
+  "jsx-a11y/label-has-associated-control": [
+  2,
+  {
+  "labelComponents": [
+  "CustomInputLabel"
+  ],
+  "labelAttributes": [
+  "label"
+  ],
+  "controlComponents": [
+  "CustomInput"
+  ],
+  "depth": 3
+  }
+  ],
+  "linebreak-style": "off",
+  "max-len": [
+  2,
+  140,
+  2,
+  {
+  "ignoreUrls": true
+  }
+  ],
+  "no-console": [
+  "warn",
+  {
+  "allow": [
+  "warn",
+  "error"
+  ]
+  }
+  ],
+  "no-case-declarations": "off",
+  "no-lonely-if": "off",
+  "no-nested-ternary": "off",
+  "no-plusplus": "off",
+  "no-prototype-builtins": "off",
+  "no-unused-expressions": "off",
+  "no-unused-vars": "warn",
+  "object-curly-newline": "off",
+  "one-var": "off",
+  "operator-linebreak": [
+  "error",
+  "before"
+  ],
+  "quote-props": "off",
+  "radix": [
+  "error",
+  "as-needed"
+  ],
+  "react/button-has-type": "off",
+  "react/jsx-no-constructed-context-values": "off",
+  "react/forbid-prop-types": "off",
+  "react/function-component-definition": [
+  2,
+  {
+  "namedComponents": "arrow-function",
+  "unnamedComponents": "function-expression"
+  }
+  ],
+  "react/jsx-closing-tag-location": "off",
+  "react/jsx-curly-newline": "off",
+  "react/jsx-indent": "off",
+  "react/jsx-one-expression-per-line": "off",
+  "react/jsx-props-no-spreading": "off",
+  "react/prop-types": "off",
+  "react/no-array-index-key": "off",
+  "react/no-unescaped-entities": "off",
+  "react/require-default-props": "off",
+  "react/self-closing-comp": "off",
+  "semi": "off",
+  "@typescript-eslint/semi": [
+  "off"
+  ],
+  "@typescript-eslint/no-unused-expressions": "off"
+  }
+  }
