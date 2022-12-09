@@ -30,7 +30,7 @@ type UpdateTotalPagesActionType = {
 
 type SiteActionType = UpdateValuesActionType | UpdatePageActionType | UpdateResultsActionType | UpdateTotalPagesActionType
 
-const updateValues = (payload, state: SiteStateType) => ({
+const updateValues = (payload: any, state: SiteStateType) => ({
   ...state,
   values: payload
 })
