@@ -1,113 +1,110 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Formik, Form } from 'formik'
-import Pagination from '../../components/Pagination'
-import Spinner from '../../components/Spinner'
+import Carousel from '../../components/Carousel'
+import MovieCard from '../../components/Cards/Movie'
+import PeopleCard from '../../components/Cards/People'
+import TvCard from '../../components/Cards/TV'
 import SiteContext from '../../context/SiteContext/SiteContext'
 import SiteContextType from '../../types/SiteContextType'
+import ValuesType from '../../types/ValuesType'
 import AutoSubmit from './structure/AutoSubmit'
-import MovieList from './structure/MovieList/MovieList'
 import SearchForm from './structure/SearchForm'
 import validationSchema from './validation/validationSchema'
-import ValuesType from '../../types/ValuesType'
 
 const Search = () => {
   const { site, siteDispatch } = useContext<SiteContextType>(SiteContext)
 
+  const [trending, setTrending] = useState({ movies: [], tv: [], people: [] })
   const [isLoading, setIsLoading] = useState(false)
-  const [showNoResults, setShowNoResults] = useState(false)
 
-  const onSubmit = async (values: ValuesType, page: number) => {
-    setIsLoading(true)
-
-    const { searchTerm, searchType, year } = values
-
+  useEffect(() => {
     try {
-      axios.get('/api/search', {
+      const movies = axios.get('/api/trending', {
         params: {
-          page,
-          searchType,
-          searchTerm,
-          year,
+          type: 'movie'
         },
       })
-        .then((response) => {
-          // console.log('results', response.data.results.filter((item) => item.Type !== 'movie' && item.Type !== 'series' && item.Type !== 'game'))
-          setShowNoResults(response.data.results.length === 0)
 
-          siteDispatch({
-            type: 'UPDATE_RESULTS',
-            payload: response.data.results
-          })
+      const tv = axios.get('/api/trending', {
+        params: {
+          type: 'tv'
+        },
+      })
 
-          siteDispatch({
-            type: 'UPDATE_TOTAL_PAGES',
-            payload: Math.ceil(response.data.totalResults / 10)
-          })
+      const people = axios.get('/api/trending', {
+        params: {
+          type: 'person'
+        },
+      })
 
-          siteDispatch({
-            type: 'UPDATE_PAGE',
-            payload: page
-          })
+      axios.all([movies, tv, people]).then(axios.spread((...responses) => {
+        const moviesResponse = responses[0]
+        const tvResponse = responses[1]
+        const peopleResponse = responses[2]
+
+        setTrending({
+          movies: moviesResponse.data.results.filter((movie) => movie.poster_path !== null),
+          tv: tvResponse.data.results.filter((series) => series.poster_path !== null),
+          people: peopleResponse.data.results.filter((person) => person.profile_path !== null),
         })
-        .catch((error) => {
-          console.error(error)
-        })
+      }))
     } catch (error) {
       console.error('ERROR Fetching Data', error)
     }
+  }, [])
 
-    setIsLoading(false)
-  }
+  const carouselMovieItems = trending.movies.map((item) => (
+    <MovieCard item={item} />
+  ))
+
+  const carouselTvItems = trending.tv.map((item) => (
+    <TvCard item={item} />
+  ))
+
+  const carouselPeopleItems = trending.people.map((item) => (
+    <PeopleCard item={item} />
+  ))
 
   return (
     <div className="my-14">
       <Formik
         initialValues={site.values}
-        validationSchema={validationSchema}
+        // validationSchema={validationSchema}
         validateOnBlur={false}
         validateOnChange={false}
-        onSubmit={(values: ValuesType) => onSubmit(values, 1)}
+        onSubmit={() => console.log('submit')}
       >
-        {({ values }) => (
+        {() => (
           <Form noValidate>
             <AutoSubmit />
 
-            <h1 className="text-center text-yellow-400 text-5xl font-rockSalt">Movie Search</h1>
+            <h1 className="text-center text-yellow-400 text-5xl font-rockSalt">TMDB Search</h1>
 
             <SearchForm />
 
-            {isLoading && (
-              <div className="relative">
-                <Spinner />
+            {trending.movies.length > 0 && (
+              <div className="my-12">
+                <h2 className="text-3xl text-yellow-400 font-rockSalt mb-5">Trending Movies</h2>
+
+                <Carousel carouselItems={carouselMovieItems} />
               </div>
             )}
 
-            {!isLoading && showNoResults && (
-              <div className="text-yellow-400">
-                <h3 className="text-3xl">Hmmm...</h3>
+            {trending.tv.length > 0 && (
+              <div className="my-12">
+                <h2 className="text-3xl text-yellow-400 font-rockSalt mb-5">Trending Series</h2>
 
-                <p className="text-2xl my-3">
-                  We couldn&apos;t find any matches for <span className="font-bold italic">{`"${values.searchTerm}`}</span>
-                </p>
-
-                <p>Double check your search for any typos or spelling errors - or try a different search term.</p>
+                <Carousel carouselItems={carouselTvItems} />
               </div>
             )}
 
-            {!isLoading && site.results?.length > 0 && (
-              <>
-                <MovieList results={site.results} />
+            {trending.people.length > 0 && (
+              <div className="my-12">
+                <h2 className="text-3xl text-yellow-400 font-rockSalt mb-5">Trending People</h2>
 
-                {site.totalPages > 1 && (
-                  <Pagination
-                    className="my-12"
-                    totalPages={site.totalPages}
-                    onPageChange={(e) => onSubmit(values, e.selected + 1)}
-                    page={site.page - 1}
-                  />
-                )}
-              </>
+                <Carousel carouselItems={carouselPeopleItems} />
+              </div>
             )}
           </Form>
         )}
