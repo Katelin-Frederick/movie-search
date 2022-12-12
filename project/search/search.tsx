@@ -2,15 +2,17 @@ import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Formik, Form } from 'formik'
 import Carousel from '../../components/Carousel'
-import MovieCard from '../../components/Cards/Movie'
-import PeopleCard from '../../components/Cards/People'
-import TvCard from '../../components/Cards/TV'
 import SiteContext from '../../context/SiteContext/SiteContext'
 import SiteContextType from '../../types/SiteContextType'
 import ValuesType from '../../types/ValuesType'
 import AutoSubmit from './structure/AutoSubmit'
 import SearchForm from './structure/SearchForm'
 import validationSchema from './validation/validationSchema'
+import ResultsList from '../../components/ResultsList/ResultsList'
+import MovieCarouselCard from '../../components/Carousel/CarouselCards/Movie/MovieCarouselCard'
+import TvCarouselCard from '../../components/Carousel/CarouselCards/TV'
+import PeopleCarouselCard from '../../components/Carousel/CarouselCards/People'
+import Pagination from '../../components/Pagination'
 
 const Search = () => {
   const { site, siteDispatch } = useContext<SiteContextType>(SiteContext)
@@ -54,34 +56,84 @@ const Search = () => {
     }
   }, [])
 
+  const onSubmit = (values: ValuesType, page: number) => {
+    const { searchTerm, searchType, year } = values
+
+    axios.get('/api/search', {
+      params: {
+        searchType,
+        searchTerm,
+        year,
+        page,
+      },
+    })
+      .then((response) => {
+        siteDispatch({
+          type: 'UPDATE_RESULTS',
+          payload: response.data.results
+        })
+
+        siteDispatch({
+          type: 'UPDATE_TYPE',
+          payload: searchType
+        })
+
+        siteDispatch({
+          type: 'UPDATE_TOTAL_PAGES',
+          payload: response.data.total_pages
+        })
+
+        siteDispatch({
+          type: 'UPDATE_PAGE',
+          payload: page
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
   const carouselMovieItems = trending.movies.map((item) => (
-    <MovieCard item={item} />
+    <MovieCarouselCard item={item} />
   ))
 
   const carouselTvItems = trending.tv.map((item) => (
-    <TvCard item={item} />
+    <TvCarouselCard item={item} />
   ))
 
   const carouselPeopleItems = trending.people.map((item) => (
-    <PeopleCard item={item} />
+    <PeopleCarouselCard item={item} />
   ))
 
   return (
     <div className="my-14">
       <Formik
         initialValues={site.values}
-        // validationSchema={validationSchema}
+        validationSchema={validationSchema}
         validateOnBlur={false}
         validateOnChange={false}
-        onSubmit={() => console.log('submit')}
+        onSubmit={(values) => onSubmit(values, 1)}
       >
-        {() => (
+        {({ values }) => (
           <Form noValidate>
             <AutoSubmit />
 
             <h1 className="text-center text-yellow-400 text-5xl font-rockSalt">TMDB Search</h1>
 
             <SearchForm />
+
+            {site.results.length > 0 && (
+              <ResultsList results={site.results} />
+            )}
+
+            {site.totalPages > 1 && (
+              <Pagination
+                className="my-12"
+                totalPages={site.totalPages}
+                onPageChange={(e) => onSubmit(values, e.selected + 1)}
+                page={site.page - 1}
+              />
+            )}
 
             {trending.movies.length > 0 && (
               <div className="my-12">

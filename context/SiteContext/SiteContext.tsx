@@ -10,7 +10,8 @@ const Site: SiteContextType = {
     },
     page: 0,
     results: [],
-    totalPages: 0
+    totalPages: 0,
+    type: '',
   },
   siteDispatch: ({ type, payload }) => { },
 }

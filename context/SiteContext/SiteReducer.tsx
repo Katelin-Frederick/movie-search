@@ -28,7 +28,12 @@ type UpdateTotalPagesActionType = {
   payload: number
 }
 
-type SiteActionType = UpdateValuesActionType | UpdatePageActionType | UpdateResultsActionType | UpdateTotalPagesActionType
+type UpdateTypeActionType = {
+  type: 'UPDATE_TYPE'
+  payload: '' | 'movie' | 'tv' | 'person'
+}
+
+type SiteActionType = UpdateValuesActionType | UpdatePageActionType | UpdateResultsActionType | UpdateTotalPagesActionType | UpdateTypeActionType
 
 const updateValues = (payload: any, state: SiteStateType) => ({
   ...state,
@@ -50,6 +55,11 @@ const updateTotalPages = (payload: number, state: SiteStateType) => ({
   totalPages: payload
 })
 
+const updateType = (payload: '' | 'movie' | 'tv' | 'person', state: SiteStateType) => ({
+  ...state,
+  type: payload
+})
+
 const SiteReducer = (state: SiteStateType, action: SiteActionType) => {
   switch (action.type) {
     case 'UPDATE_VALUES':
@@ -60,6 +70,8 @@ const SiteReducer = (state: SiteStateType, action: SiteActionType) => {
       return updateResults(action.payload, state)
     case 'UPDATE_TOTAL_PAGES':
       return updateTotalPages(action.payload, state)
+    case 'UPDATE_TYPE':
+      return updateType(action.payload, state)
     default:
       return state
   }

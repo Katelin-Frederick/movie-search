@@ -9,16 +9,20 @@ const Carousel = ({ carouselItems }) => (
     modules={[Navigation, Pagination, A11y, Virtual, Keyboard, Mousewheel, Lazy, Autoplay]}
     slidesPerView={1}
     breakpoints={{
-      768: {
+      640: {
         slidesPerView: 2,
         spaceBetween: 20,
       },
-      1024: {
+      768: {
         slidesPerView: 3,
         spaceBetween: 20,
       },
-      1500: {
+      1024: {
         slidesPerView: 4,
+        spaceBetween: 20,
+      },
+      1500: {
+        slidesPerView: 5,
         spaceBetween: 20,
       },
     }}

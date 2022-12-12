@@ -6,6 +6,7 @@ type SiteType = {
   page: number
   results: ResultsType[]
   totalPages: number
+  type: '' | 'movie' | 'tv' | 'person'
 }
 
 export default SiteType

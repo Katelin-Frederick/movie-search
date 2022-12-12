@@ -1,5 +1,5 @@
 type ValuesType = {
-  searchType: 'movie' | 'series' | ''
+  searchType: 'movie' | 'tv' | ''
   searchTerm: string
   year: string
 }

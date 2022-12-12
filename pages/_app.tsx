@@ -4,6 +4,7 @@ import site from '../context/SiteContext/site.json'
 import SiteContext from '../context/SiteContext/SiteContext'
 import SiteReducer from '../context/SiteContext/SiteReducer'
 import '../styles/globals.css'
+import '../styles/Carousel.css'
 import '../styles/Pagination.css'
 import '../styles/Spinner.css'
 

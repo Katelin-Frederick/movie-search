@@ -5,19 +5,20 @@ import Option from './Option'
 import TextError from '../TextError'
 
 type DropdownPropTypes = {
+  className?: string
   label: string,
   options: any[],
 } & React.ComponentProps<'select'>
 
-const Dropdown = ({ label, name, options, ...rest }: DropdownPropTypes) => (
-  <div>
+const Dropdown = ({ className, label, name, options, ...rest }: DropdownPropTypes) => (
+  <div className={className}>
     <Label name={name} label={label} />
 
     <Field name={name}>
       {({ field }: FieldProps) => (
         <div>
           <select
-            className="border border-gray-700 rounded-md px-2 py-2 w-full md:w-auto min-w-[200px] mt-2"
+            className="h-11 border border-gray-700 rounded-md px-2 py-2 w-full md:w-auto min-w-[200px] mt-2"
             {...rest}
             {...field}
           >

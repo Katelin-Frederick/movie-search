@@ -1,7 +1,7 @@
 import Details from '../../project/details/details'
 
 const Home = ({ details }) => (
-  <div className="container mx-auto">
+  <div className="container mx-auto max-h-[1280px]">
     <Details details={details} />
   </div>
 )

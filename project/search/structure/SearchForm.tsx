@@ -4,11 +4,12 @@ import Button from '../../../components/Button'
 import Dropdown from '../../../components/Dropdown'
 import TextField from '../../../components/TextField'
 import SiteContext from '../../../context/SiteContext/SiteContext'
+import ValuesType from '../../../types/ValuesType'
 
 const SearchForm = () => {
   const { siteDispatch } = useContext(SiteContext)
 
-  const { resetForm } = useFormikContext()
+  const { values, resetForm } = useFormikContext<ValuesType>()
 
   return (
     <div className="flex justify-center items-center my-14">
@@ -22,15 +23,8 @@ const SearchForm = () => {
             placeholder="Enter Search Term"
           />
 
-          <TextField
-            className="md:pr-3 mb-5 md:mb-0"
-            label="Year"
-            name="year"
-            maxLength={4}
-            placeholder="Enter Year"
-          />
-
           <Dropdown
+            className="md:pr-3"
             label="Search Type"
             name="searchType"
             options={[
@@ -44,31 +38,62 @@ const SearchForm = () => {
                 label: 'Movie'
               },
               {
-                value: 'series',
+                value: 'tv',
                 label: 'Series'
+              },
+              {
+                value: 'person',
+                label: 'Person'
               },
             ]}
           />
+
+          {(values.searchType === 'movie' || values.searchType === 'tv') && (
+            <TextField
+              className="mb-5 md:mb-0"
+              label="Year"
+              name="year"
+              maxLength={4}
+              placeholder="Enter Year"
+            />
+          )}
+
         </div>
 
-        <div className='flex flex-col md:flex-row justify-center items-center mt-5'>
+        <div className="flex flex-col md:flex-row justify-center items-center mt-5">
           <Button
-            variant='secondary'
+            variant="secondary"
             onClick={() => {
               resetForm()
+
               siteDispatch({
                 type: 'UPDATE_RESULTS',
                 payload: []
               })
+
+              siteDispatch({
+                type: 'UPDATE_TYPE',
+                payload: ''
+              })
+
+              siteDispatch({
+                type: 'UPDATE_TOTAL_PAGES',
+                payload: 0
+              })
+
+              siteDispatch({
+                type: 'UPDATE_PAGE',
+                payload: 0
+              })
             }}
-            type='button'
+            type="button"
           >
             Reset
           </Button>
 
           <Button
             className="mt-5 md:mt-0 md:ml-4"
-            type='submit'
+            type="submit"
           >
             Search
           </Button>
