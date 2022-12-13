@@ -11,11 +11,12 @@ const MovieCarouselCard = ({ item }) => {
         <Image
           alt={item.title}
           src={`https://image.tmdb.org/t/p/w185/${item.poster_path}`}
+          className="rounded-t-md"
           width="0"
           height="0"
           sizes="100vw"
           style={{ width: '100%', height: '100%' }}
-          className="rounded-t-md"
+          priority
         />
 
         <div className="flex justify-center items-center px-3 py-5 border-t-2 border-light-gray">

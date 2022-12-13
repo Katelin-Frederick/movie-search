@@ -1,9 +1,9 @@
 .loader {
-  position: absolute;
-  top: calc(50% - 32px);
-  left: calc(50% - 32px);
-  width: 64px;
-  height: 64px;
+  position: relative;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   perspective: 800px;
 }

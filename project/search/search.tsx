@@ -2,25 +2,29 @@ import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Formik, Form } from 'formik'
 import Carousel from '../../components/Carousel'
+import MovieCarouselCard from '../../components/Carousel/CarouselCards/Movie/MovieCarouselCard'
+import Pagination from '../../components/Pagination'
+import PeopleCarouselCard from '../../components/Carousel/CarouselCards/People'
+import ResultsList from '../../components/ResultsList/ResultsList'
+import Spinner from '../../components/Spinner'
+import TvCarouselCard from '../../components/Carousel/CarouselCards/TV'
 import SiteContext from '../../context/SiteContext/SiteContext'
-import SiteContextType from '../../types/SiteContextType'
-import ValuesType from '../../types/ValuesType'
 import AutoSubmit from './structure/AutoSubmit'
 import SearchForm from './structure/SearchForm'
+import SiteContextType from '../../types/SiteContextType'
+import ValuesType from '../../types/ValuesType'
 import validationSchema from './validation/validationSchema'
-import ResultsList from '../../components/ResultsList/ResultsList'
-import MovieCarouselCard from '../../components/Carousel/CarouselCards/Movie/MovieCarouselCard'
-import TvCarouselCard from '../../components/Carousel/CarouselCards/TV'
-import PeopleCarouselCard from '../../components/Carousel/CarouselCards/People'
-import Pagination from '../../components/Pagination'
 
 const Search = () => {
   const { site, siteDispatch } = useContext<SiteContextType>(SiteContext)
 
   const [trending, setTrending] = useState({ movies: [], tv: [], people: [] })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [showNoResults, setShowNoResults] = useState(false)
 
   useEffect(() => {
+    setIsLoading(true)
+
     try {
       const movies = axios.get('/api/trending', {
         params: {
@@ -54,9 +58,13 @@ const Search = () => {
     } catch (error) {
       console.error('ERROR Fetching Data', error)
     }
+
+    setIsLoading(false)
   }, [])
 
   const onSubmit = (values: ValuesType, page: number) => {
+    setIsLoading(true)
+
     const { searchTerm, searchType, year } = values
 
     axios.get('/api/search', {
@@ -68,6 +76,8 @@ const Search = () => {
       },
     })
       .then((response) => {
+        setShowNoResults(response.data.results.length === 0)
+
         siteDispatch({
           type: 'UPDATE_RESULTS',
           payload: response.data.results
@@ -91,6 +101,8 @@ const Search = () => {
       .catch((error) => {
         console.error(error)
       })
+
+    setIsLoading(false)
   }
 
   const carouselMovieItems = trending.movies.map((item) => (
@@ -120,13 +132,29 @@ const Search = () => {
 
             <h1 className="text-center text-yellow-400 text-5xl font-rockSalt">TMDB Search</h1>
 
-            <SearchForm />
+            <SearchForm setShowNoResults={setShowNoResults} />
 
-            {site.results.length > 0 && (
+            {isLoading && (
+              <Spinner />
+            )}
+
+            {!isLoading && showNoResults && (
+              <div className="text-yellow-400 my-20">
+                <h3 className="text-3xl">Hmmm...</h3>
+
+                <p className="text-2xl my-3">
+                  We couldn&apos;t find any matches for <span className="font-bold italic">{`"${values.searchTerm}"`}</span>
+                </p>
+
+                <p>Double check your search for any typos or spelling errors - or try a different search term.</p>
+              </div>
+            )}
+
+            {!isLoading && site.results.length > 0 && (
               <ResultsList results={site.results} />
             )}
 
-            {site.totalPages > 1 && (
+            {!isLoading && site.totalPages > 1 && (
               <Pagination
                 className="my-12"
                 totalPages={site.totalPages}
@@ -135,7 +163,7 @@ const Search = () => {
               />
             )}
 
-            {trending.movies.length > 0 && (
+            {!isLoading && trending.movies.length > 0 && (
               <div className="my-12">
                 <h2 className="text-3xl text-yellow-400 font-rockSalt mb-5">Trending Movies</h2>
 
@@ -143,7 +171,7 @@ const Search = () => {
               </div>
             )}
 
-            {trending.tv.length > 0 && (
+            {!isLoading && trending.tv.length > 0 && (
               <div className="my-12">
                 <h2 className="text-3xl text-yellow-400 font-rockSalt mb-5">Trending Series</h2>
 
@@ -151,7 +179,7 @@ const Search = () => {
               </div>
             )}
 
-            {trending.people.length > 0 && (
+            {!isLoading && trending.people.length > 0 && (
               <div className="my-12">
                 <h2 className="text-3xl text-yellow-400 font-rockSalt mb-5">Trending People</h2>
 

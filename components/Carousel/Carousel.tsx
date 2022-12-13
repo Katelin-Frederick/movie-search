@@ -1,8 +1,9 @@
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, A11y, Virtual, Keyboard, Mousewheel, Lazy, Autoplay } from 'swiper'
 import 'swiper/css'
-import 'swiper/css/pagination'
+import 'swiper/css/lazy'
 import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
 const Carousel = ({ carouselItems }) => (
   <Swiper

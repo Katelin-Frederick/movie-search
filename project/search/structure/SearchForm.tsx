@@ -6,7 +6,7 @@ import TextField from '../../../components/TextField'
 import SiteContext from '../../../context/SiteContext/SiteContext'
 import ValuesType from '../../../types/ValuesType'
 
-const SearchForm = () => {
+const SearchForm = ({ setShowNoResults }) => {
   const { siteDispatch } = useContext(SiteContext)
 
   const { values, resetForm } = useFormikContext<ValuesType>()
@@ -65,6 +65,7 @@ const SearchForm = () => {
             variant="secondary"
             onClick={() => {
               resetForm()
+              setShowNoResults(false)
 
               siteDispatch({
                 type: 'UPDATE_RESULTS',
