@@ -1,19 +1,15 @@
 import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Formik, Form } from 'formik'
-import Carousel from '../../components/Carousel'
-import MovieCarouselCard from '../../components/Carousel/CarouselCards/Movie/MovieCarouselCard'
-import Pagination from '../../components/Pagination'
-import PeopleCarouselCard from '../../components/Carousel/CarouselCards/People'
-import ResultsList from '../../components/ResultsList/ResultsList'
 import Spinner from '../../components/Spinner'
-import TvCarouselCard from '../../components/Carousel/CarouselCards/TV'
 import SiteContext from '../../context/SiteContext/SiteContext'
 import AutoSubmit from './structure/AutoSubmit'
 import SearchForm from './structure/SearchForm'
 import SiteContextType from '../../types/SiteContextType'
 import ValuesType from '../../types/ValuesType'
 import validationSchema from './validation/validationSchema'
+import Trending from './structure/Trending'
+import Results from './structure/Results'
 
 const Search = () => {
   const { site, siteDispatch } = useContext<SiteContextType>(SiteContext)
@@ -22,11 +18,11 @@ const Search = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [showNoResults, setShowNoResults] = useState(false)
 
-  useEffect(() => {
+  const getTrending = async () => {
     setIsLoading(true)
 
     try {
-      const movies = axios.get('/api/trending', {
+      const movies = await axios.get('/api/trending', {
         params: {
           type: 'movie'
         },
@@ -60,14 +56,18 @@ const Search = () => {
     }
 
     setIsLoading(false)
+  }
+
+  useEffect(() => {
+    getTrending()
   }, [])
 
-  const onSubmit = (values: ValuesType, page: number) => {
+  const onSubmit = async (values: ValuesType, page: number) => {
     setIsLoading(true)
 
     const { searchTerm, searchType, year } = values
 
-    axios.get('/api/search', {
+    await axios.get('/api/search', {
       params: {
         searchType,
         searchTerm,
@@ -105,18 +105,6 @@ const Search = () => {
     setIsLoading(false)
   }
 
-  const carouselMovieItems = trending.movies.map((item) => (
-    <MovieCarouselCard item={item} />
-  ))
-
-  const carouselTvItems = trending.tv.map((item) => (
-    <TvCarouselCard item={item} />
-  ))
-
-  const carouselPeopleItems = trending.people.map((item) => (
-    <PeopleCarouselCard item={item} />
-  ))
-
   return (
     <div className="my-14">
       <Formik
@@ -126,7 +114,7 @@ const Search = () => {
         validateOnChange={false}
         onSubmit={(values) => onSubmit(values, 1)}
       >
-        {({ values }) => (
+        {() => (
           <Form noValidate>
             <AutoSubmit />
 
@@ -138,54 +126,13 @@ const Search = () => {
               <Spinner />
             )}
 
-            {!isLoading && showNoResults && (
-              <div className="text-yellow-400 my-20">
-                <h3 className="text-3xl">Hmmm...</h3>
+            <Results
+              isLoading={isLoading}
+              showNoResults={showNoResults}
+              onSubmit={onSubmit}
+            />
 
-                <p className="text-2xl my-3">
-                  We couldn&apos;t find any matches for <span className="font-bold italic">{`"${values.searchTerm}"`}</span>
-                </p>
-
-                <p>Double check your search for any typos or spelling errors - or try a different search term.</p>
-              </div>
-            )}
-
-            {!isLoading && site.results.length > 0 && (
-              <ResultsList results={site.results} />
-            )}
-
-            {!isLoading && site.totalPages > 1 && (
-              <Pagination
-                className="my-12"
-                totalPages={site.totalPages}
-                onPageChange={(e) => onSubmit(values, e.selected + 1)}
-                page={site.page - 1}
-              />
-            )}
-
-            {!isLoading && trending.movies.length > 0 && (
-              <div className="my-12">
-                <h2 className="text-3xl text-yellow-400 font-rockSalt mb-5">Trending Movies</h2>
-
-                <Carousel carouselItems={carouselMovieItems} />
-              </div>
-            )}
-
-            {!isLoading && trending.tv.length > 0 && (
-              <div className="my-12">
-                <h2 className="text-3xl text-yellow-400 font-rockSalt mb-5">Trending Series</h2>
-
-                <Carousel carouselItems={carouselTvItems} />
-              </div>
-            )}
-
-            {!isLoading && trending.people.length > 0 && (
-              <div className="my-12">
-                <h2 className="text-3xl text-yellow-400 font-rockSalt mb-5">Trending People</h2>
-
-                <Carousel carouselItems={carouselPeopleItems} />
-              </div>
-            )}
+            <Trending isLoading={isLoading} trending={trending} />
           </Form>
         )}
       </Formik>
