@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Button from '../../../Button'
 
-const CastCarouselCard = ({ item }) => {
+const PeopleCarouselCard = ({ item }) => {
   const router = useRouter()
 
   return (
@@ -24,6 +24,8 @@ const CastCarouselCard = ({ item }) => {
         <div className="flex flex-col justify-center items-center px-3 py-5 border-t-2 border-light-gray">
           <h3 className="text-3xl mb-5 text-center">{item.name}</h3>
 
+          <h4 className="text-lg mb-5 text-center">{item.character}</h4>
+
           <Button
             type="button"
             className="text-black"
@@ -37,4 +39,4 @@ const CastCarouselCard = ({ item }) => {
   )
 }
 
-export default CastCarouselCard
+export default PeopleCarouselCard

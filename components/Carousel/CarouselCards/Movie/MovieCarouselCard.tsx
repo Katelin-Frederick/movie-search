@@ -23,7 +23,7 @@ const MovieCarouselCard = ({ item }) => {
           <Button
             type="button"
             className="text-black"
-            onClick={() => router.push(`/details/${item.id}`)}
+            onClick={() => router.push(`/details/movie/${item.id}`)}
           >
             View Details
           </Button>
