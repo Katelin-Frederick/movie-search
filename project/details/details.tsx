@@ -4,19 +4,27 @@ import Button from '../../components/Button'
 import Carousel from '../../components/Carousel'
 import CastCarouselCard from '../../components/Carousel/CarouselCards/Cast'
 import MovieCarouselCard from '../../components/Carousel/CarouselCards/Movie/MovieCarouselCard'
+import currencyUS from '../../helpers/currencyUS'
+import formatDate from '../../helpers/formatDate'
 
-const Details = ({ details, collections, credits }) => {
+const Details = ({ collections, credits, details, rating, recommended }) => {
   const router = useRouter()
-  console.log('details', details)
   console.log('collections', collections)
   console.log('credits', credits)
+  console.log('details', details)
+  console.log('rating', rating)
+  console.log('recommended', recommended)
 
-  const carouselCollectionItems = collections.parts.map((item) => (
+  const carouselCollectionItems = collections?.parts?.filter((movie) => movie.poster_path !== null).map((item) => (
     <MovieCarouselCard item={item} />
   ))
 
-  const carouselCastItems = credits.cast.filter((person) => person.profile_path !== null).map((item) => (
+  const carouselCastItems = credits?.cast?.filter((person) => person.profile_path !== null).map((item) => (
     <CastCarouselCard item={item} />
+  ))
+
+  const carouselRecommendedItems = recommended?.results?.filter((movie) => movie.poster_path !== null && movie.id !== details.id).map((item) => (
+    <MovieCarouselCard item={item} />
   ))
 
   const getDirector = () => credits.crew.filter((person) => person.job === 'Director').map((person) => person.name).join(', ')
@@ -45,95 +53,107 @@ const Details = ({ details, collections, credits }) => {
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Released: </span>{details.release_date}
+              <span className="text-white font-bold">Released: </span>{details.release_date ? formatDate(details.release_date) : 'N/A'}
             </li>
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Runtime: </span>{details.runtime}
+              <span className="text-white font-bold">Runtime: </span>{details.runtime ? `${details.runtime} minutes` : 'N/A'}
             </li>
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Budget: </span>{details.budget}
+              <span className="text-white font-bold">Rated: </span>{rating || 'N/R'}
             </li>
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Revenue: </span>{details.revenue}
+              <span className="text-white font-bold">Genres: </span>{details.genres ? getGenres(details) : 'N/A'}
             </li>
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Popularity: </span>{details.popularity}
+              <span className="text-white font-bold">Director: </span>{getDirector() ? getDirector() : 'N/A'}
             </li>
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Vote Average: </span>{details.vote_average}
+              <span className="text-white font-bold">Writer: </span>{getWriter() ? getWriter() : 'N/A'}
             </li>
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Vote Count: </span>{details.vote_count}
+              <span className="text-white font-bold">Languages: </span>{details?.spoken_languages?.length > 0 ? getLanguages(details) : 'N/A'}
             </li>
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Genres: </span>{getGenres(details)}
+              <span className="text-white font-bold">Budget: </span>{currencyUS.format(details.budget)}
             </li>
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Languages: </span>{getLanguages(details)}
+              <span className="text-white font-bold">Revenue: </span>{currencyUS.format(details.revenue)}
             </li>
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Production Companies: </span>{getProductionCompanies(details)}
+              <span className="text-white font-bold">Production Companies: </span>{details?.production_companies?.length > 0 ? getProductionCompanies(details) : 'N/A'}
             </li>
             <li
               className="px-4 py-3 border-2 border-t-0 border-light-gray"
             >
-              <span className="text-white font-bold">Production Countries: </span>{getProductionCountries(details)}
-            </li>
-            <li
-              className="px-4 py-3 border-2 border-t-0 border-light-gray"
-            >
-              <span className="text-white font-bold">Director: </span>{getDirector()}
-            </li>
-            <li
-              className="px-4 py-3 border-2 border-t-0 border-light-gray"
-            >
-              <span className="text-white font-bold">Writer: </span>{getWriter()}
+              <span className="text-white font-bold">Production Countries: </span>{details?.production_countries?.length > 0 ? getProductionCountries(details) : 'N/A'}
             </li>
           </ul>
         </div>
 
         <div className="rounded-md text-lightest-gray col-span-1 md:col-span-2 xl:col-span-1 mt-8 xl:mt-0">
           <div>
-            <h2 className="text-3xl text-white">Plot:</h2>
+            {details.overview && (
+              <>
+                <h2 className="text-3xl text-white">Plot:</h2>
 
-            <p>{details.overview}</p>
+                <p>{details.overview}</p>
+              </>
+            )}
 
-            <h2 className="text-3xl text-white mt-8">Tagline: </h2>{details.tagline}
+            {details.tagline && (
+              <>
+                <h2 className="text-3xl text-white mt-8">Tagline: </h2>
+
+                <p>{details.tagline}</p>
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="my-12">
-        <h3 className="text-3xl text-yellow-400 font-rockSalt mb-5">Cast</h3>
+      {credits?.cast.length > 0 && (
+        <div className="my-12">
+          <h3 className="text-3xl text-yellow-400 font-rockSalt mb-5">Cast</h3>
 
-        <Carousel carouselItems={carouselCastItems} />
-      </div>
+          <Carousel carouselItems={carouselCastItems} />
+        </div>
+      )}
 
-      <div className="my-12">
-        <h3 className="text-3xl text-yellow-400 font-rockSalt mb-5">{collections.name}</h3>
+      {collections?.parts?.length > 0 && (
+        <div className="my-12">
+          <h3 className="text-3xl text-yellow-400 font-rockSalt mb-5">{collections.name}</h3>
 
-        <p className="text-lightest-gray my-5">{collections.overview}</p>
+          <p className="text-lightest-gray my-5">{collections.overview}</p>
 
-        <Carousel carouselItems={carouselCollectionItems} />
-      </div>
+          <Carousel carouselItems={carouselCollectionItems} />
+        </div>
+      )}
+
+      {recommended?.results?.length > 0 && (
+        <div className="my-12">
+          <h3 className="text-3xl text-yellow-400 font-rockSalt mb-5">Recommended</h3>
+
+          <Carousel carouselItems={carouselRecommendedItems} />
+        </div>
+      )}
 
       <div className="mt-8">
         <Button
