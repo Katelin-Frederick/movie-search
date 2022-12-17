@@ -23,9 +23,10 @@ const Details = ({ collections, credits, details, rating, recommended }) => {
     <CastCarouselCard item={item} />
   ))
 
-  const carouselRecommendedItems = recommended?.results?.filter((movie) => movie.poster_path !== null && movie.id !== details.id).map((item) => (
-    <MovieCarouselCard item={item} />
-  ))
+  const carouselRecommendedItems = recommended?.results?.filter((movie) => movie.poster_path !== null && movie.id !== details.id)
+    .map((item) => (
+      <MovieCarouselCard item={item} />
+    ))
 
   const getDirector = () => credits.crew.filter((person) => person.job === 'Director').map((person) => person.name).join(', ')
   const getWriter = () => credits.crew.filter((person) => person.job === 'Writer').map((person) => person.name).join(', ')
@@ -106,6 +107,21 @@ const Details = ({ collections, credits, details, rating, recommended }) => {
               <span className="text-white font-bold">Production Countries: </span>{details?.production_countries?.length > 0 ? getProductionCountries(details) : 'N/A'}
             </li>
           </ul>
+
+          <div className="mt-8">
+            <a
+              href={`http://imdb.com/title/${details.imdb_id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                className="mt-5 md:mt-0 md:ml-4"
+                type="submit"
+              >
+                View On IMDb
+              </Button>
+            </a>
+          </div>
         </div>
 
         <div className="rounded-md text-lightest-gray col-span-1 md:col-span-2 xl:col-span-1 mt-8 xl:mt-0">
@@ -155,28 +171,14 @@ const Details = ({ collections, credits, details, rating, recommended }) => {
         </div>
       )}
 
-      <div className="mt-8">
-        <Button
-          onClick={() => router.push('/')}
-          variant="secondary"
-          type="button"
-        >
-          Back
-        </Button>
-
-        <a
-          href={`http://imdb.com/title/${details.imdb_id}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Button
-            className="mt-5 md:mt-0 md:ml-4"
-            type="submit"
-          >
-            View On IMDb
-          </Button>
-        </a>
-      </div>
+      <Button
+        className="mt-6"
+        onClick={() => router.push('/')}
+        variant="secondary"
+        type="button"
+      >
+        Back to search
+      </Button>
     </div>
   )
 }

@@ -20,7 +20,7 @@ export async function getServerSideProps({ params }) {
   const creditsURL = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.TMDB_KEY}`
   const detailsURL = `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.TMDB_KEY}`
   const ratingsURL = `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${process.env.TMDB_KEY}`
-  const recommendedURL = `https://api.themoviedb.org/3/movie/176/recommendations?api_key=${process.env.TMDB_KEY}`
+  const recommendedURL = `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${process.env.TMDB_KEY}`
 
   const [creditsRes, detailsRes, ratingsRes, recommendedRes] = await Promise.all([
     fetch(creditsURL),
