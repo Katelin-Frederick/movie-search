@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router'
 import Image from 'next/image'
+import Link from 'next/link'
+import clsx from 'clsx'
 import Button from '../../components/Button'
 import Carousel from '../../components/Carousel'
 import CastCarouselCard from '../../components/Carousel/CarouselCards/Cast'
@@ -7,11 +9,41 @@ import MovieCarouselCard from '../../components/Carousel/CarouselCards/Movie/Mov
 import currencyUS from '../../helpers/currencyUS'
 import formatDate from '../../helpers/formatDate'
 
-const Details = ({ collections, credits, details, rating, recommended }) => {
+const Btns = ({ className, details, providersLink }: { className: string, details: any, providersLink: string }) => (
+  <div className={clsx(className)}>
+    <a
+      href={providersLink}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Button
+        type="submit"
+      >
+        Where to Watch
+      </Button>
+    </a>
+
+    <a
+      href={`http://imdb.com/title/${details.imdb_id}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Button
+        className="mt-5 md:mt-0 md:ml-4"
+        type="submit"
+      >
+        View On IMDb
+      </Button>
+    </a>
+  </div>
+)
+
+const Details = ({ collections, credits, details, providersLink, rating, recommended }) => {
   const router = useRouter()
   console.log('collections', collections)
   console.log('credits', credits)
   console.log('details', details)
+  console.log('providersLink', providersLink)
   console.log('rating', rating)
   console.log('recommended', recommended)
 
@@ -107,24 +139,15 @@ const Details = ({ collections, credits, details, rating, recommended }) => {
               <span className="text-white font-bold">Production Countries: </span>{details?.production_countries?.length > 0 ? getProductionCountries(details) : 'N/A'}
             </li>
           </ul>
-
-          <div className="mt-8">
-            <a
-              href={`http://imdb.com/title/${details.imdb_id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button
-                className="mt-5 md:mt-0 md:ml-4"
-                type="submit"
-              >
-                View On IMDb
-              </Button>
-            </a>
-          </div>
         </div>
 
         <div className="rounded-md text-lightest-gray col-span-1 md:col-span-2 xl:col-span-1 mt-8 xl:mt-0">
+          <Btns
+            className="xl:hidden mb-8"
+            details={details}
+            providersLink={providersLink}
+          />
+
           <div>
             {details.overview && (
               <>
@@ -142,12 +165,22 @@ const Details = ({ collections, credits, details, rating, recommended }) => {
               </>
             )}
           </div>
+
+          <Btns
+            className="hidden xl:inline-block mt-8"
+            details={details}
+            providersLink={providersLink}
+          />
         </div>
       </div>
 
       {credits?.cast.length > 0 && (
         <div className="my-12">
-          <h3 className="text-3xl text-yellow-400 font-rockSalt mb-5">Cast</h3>
+          <div className="flex flex-row items-end justify-between mb-5">
+            <h3 className="text-3xl text-yellow-400 font-rockSalt">Cast</h3>
+
+            <Link className="text-yellow-400 underline" href={`/details/movie/${details.id}/cast-and-crew`}>View all cast and crew</Link>
+          </div>
 
           <Carousel carouselItems={carouselCastItems} />
         </div>

@@ -1,4 +1,4 @@
-import Details from '../../../project/details/details'
+import Details from '../../../project/details/MovieDetails'
 
 const Home = ({ details }) => (
   <div className="container mx-auto max-h-[1280px]">
