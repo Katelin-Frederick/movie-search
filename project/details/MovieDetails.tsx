@@ -11,17 +11,19 @@ import formatDate from '../../helpers/formatDate'
 
 const Btns = ({ className, details, providersLink }: { className: string, details: any, providersLink: string }) => (
   <div className={clsx(className)}>
-    <a
-      href={providersLink}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <Button
-        type="submit"
+    {providersLink && (
+      <a
+        href={providersLink}
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        Where to Watch
-      </Button>
-    </a>
+        <Button
+          type="submit"
+        >
+          Where to Watch
+        </Button>
+      </a>
+    )}
 
     <a
       href={`http://imdb.com/title/${details.imdb_id}`}

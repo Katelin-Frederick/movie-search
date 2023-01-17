@@ -51,7 +51,7 @@ export async function getServerSideProps({ params }) {
       collections,
       credits,
       details,
-      providersLink: providers.results.US.link,
+      providersLink: providers?.results?.US?.link ? providers?.results?.US?.link : null,
       rating: usRating,
       recommended,
     }

@@ -1,4 +1,3 @@
-
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import Button from '../../components/Button'
@@ -24,13 +23,16 @@ const Crew = ({ credits, details }) => {
 
           <table className="lg:mr-8">
             <thead>
-              <th className="text-left text-yellow-400 text-xl p-4">Actor</th>
-              <th className="text-left text-yellow-400 text-xl p-4">Character</th>
+              <tr>
+                <th className="text-left text-yellow-400 text-xl p-4">Actor</th>
+                <th className="text-left text-yellow-400 text-xl p-4">Character</th>
+              </tr>
             </thead>
             <tbody className="text-white">
               {
-                credits.cast.map((person, index) => (
+                credits.cast.map((person, index: number) => (
                   <tr
+                    key={`cast-${index}`}
                     className={clsx(
                       index % 2 === 0 ? 'bg-light-gray' : 'bg-gray'
                     )}
@@ -65,13 +67,16 @@ const Crew = ({ credits, details }) => {
 
           <table>
             <thead>
-              <th className="text-left text-yellow-400 text-xl p-4">Crew Member</th>
-              <th className="text-left text-yellow-400 text-xl p-4">Title</th>
+              <tr>
+                <th className="text-left text-yellow-400 text-xl p-4">Crew Member</th>
+                <th className="text-left text-yellow-400 text-xl p-4">Title</th>
+              </tr>
             </thead>
             <tbody className="text-white">
               {
-                credits.crew.map((person, index) => (
+                credits.crew.map((person, index: number) => (
                   <tr
+                    key={`crew-${index}`}
                     className={clsx(
                       index % 2 === 0 ? 'bg-light-gray' : 'bg-gray'
                     )}
