@@ -27,7 +27,7 @@ const CastCarouselCard = ({ item }) => {
           <Button
             type="button"
             className="text-black"
-            onClick={() => router.push(`/details/${item.id}`)}
+            onClick={() => router.push(`/details/person/${item.id}`)}
           >
             View Details
           </Button>

@@ -1,8 +1,8 @@
-import Details from '../../../project/details/MovieDetails'
+import PersonDetails from '../../../project/details/PersonDetails'
 
-const Home = ({ details }) => (
+const Home = ({ credits, details }) => (
   <div className="container mx-auto max-h-[1280px]">
-    <Details details={details} />
+    <PersonDetails credits={credits} details={details} />
   </div>
 )
 
@@ -11,13 +11,23 @@ export default Home
 export async function getServerSideProps({ params }) {
   const { id } = params
 
-  const response = await fetch(`https://www.omdbapi.com/?i=${id}&plot=full&apikey=${process.env.OMDBI_KEY}`)
+  const creditsURL = `https://api.themoviedb.org/3/person/${id}/combined_credits?api_key=${process.env.TMDB_KEY}`
+  const detailsURL = `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.TMDB_KEY}`
 
-  const data = await response.json()
+  const [creditsRes, detailsRes] = await Promise.all([
+    fetch(creditsURL),
+    fetch(detailsURL),
+  ])
+
+  const [credits, details] = await Promise.all([
+    creditsRes.json(),
+    detailsRes.json(),
+  ])
 
   return {
     props: {
-      details: data
+      credits,
+      details,
     }
   }
 }
