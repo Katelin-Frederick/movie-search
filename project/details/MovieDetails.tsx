@@ -40,7 +40,7 @@ const Btns = ({ className, details, providersLink }: { className: string, detail
   </div>
 )
 
-const Details = ({ collections, credits, details, providersLink, rating, recommended }) => {
+const MovieDetails = ({ collections, credits, details, providersLink, rating, recommended }) => {
   const router = useRouter()
   console.log('collections', collections)
   console.log('credits', credits)
@@ -218,4 +218,4 @@ const Details = ({ collections, credits, details, providersLink, rating, recomme
   )
 }
 
-export default Details
+export default MovieDetails

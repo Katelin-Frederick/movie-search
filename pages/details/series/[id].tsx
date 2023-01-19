@@ -11,7 +11,7 @@ export default Home
 export async function getServerSideProps({ params }) {
   const { id } = params
 
-  const response = await fetch(`https://www.omdbapi.com/?i=${id}&plot=full&apikey=${process.env.OMDBI_KEY}`)
+  const response = await fetch(`https://www.omdbapi.com/?i=${id}&plot=full&apikey=${process.env.OMDBI_KEY}&include_adult=false`)
 
   const data = await response.json()
 

@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } = req;
 
   try {
-    const response = await fetch(`https://api.themoviedb.org/3/trending/${type}/day?api_key=${process.env.TMDB_KEY}`)
+    const response = await fetch(`https://api.themoviedb.org/3/trending/${type}/day?api_key=${process.env.TMDB_KEY}&include_adult=false`)
       .then((info) => info.json())
       .then((data) => data)
 
