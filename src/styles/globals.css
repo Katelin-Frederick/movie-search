@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import 'swiper/css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -11,7 +12,7 @@
 
   /***** Colors *****/
   /* White */
-  --color-white-100: #F4F4F4;
+  --color-white: #F4F4F4;
 
   /* Gray */
   --color-gray-100: #666666;
@@ -154,6 +155,64 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+}
+
+.swiper-button-next, .swiper-button-prev {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(250 204 21) !important;
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-family: swiper-icons;
+  text-transform: none!important;
+  letter-spacing: 0;
+  font-variant: initial;
+  line-height: 1;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+}
+
+.swiper-button-prev:after {
+  border-radius: 30% 0 0 30%;
+}
+
+.swiper-button-next:after {
+  border-radius: 0 30% 30% 0;
+}
+
+.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+  background: rgb(250 204 21);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 5px;
+  transform: scale(0);
+  transform-origin: left top;
+  z-index: 1;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -164,6 +223,6 @@ body {
 }
 
 .container {
- @apply max-w-[65rem];
- @apply px-5;
+  @apply max-w-[80rem];
+  @apply px-5;
 }
