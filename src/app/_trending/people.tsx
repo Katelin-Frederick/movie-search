@@ -3,13 +3,13 @@
 
 import 'swiper/css/navigation'
 
-import type { TrendingPeopleResponse, } from 'types/person'
+import type { TMDBPerson, } from 'types/person'
 
 import Carousel from '~/components/Carousel/Carousel'
 import { rockSalt, } from '~/fonts'
 import { cn, } from '~/lib/utils'
 
-const TrendingPeople = ({ trendingPeople, }: { trendingPeople: TrendingPeopleResponse }) => (
+const TrendingPeople = ({ trendingPeople, }: { trendingPeople: TMDBPerson[] }) => (
   <>
     <h2
       className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
@@ -17,7 +17,7 @@ const TrendingPeople = ({ trendingPeople, }: { trendingPeople: TrendingPeopleRes
       Trending People
     </h2>
 
-    <Carousel type='people' data={trendingPeople.results} />
+    <Carousel type='people' data={trendingPeople} />
   </>
 )
 

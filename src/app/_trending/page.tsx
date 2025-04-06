@@ -1,22 +1,34 @@
-import React from 'react'
+'use client'
 
-import { api, } from '~/trpc/server'
+import { api, } from '~/trpc/react'
 import { rockSalt, } from '~/fonts'
 import { cn, } from '~/lib/utils'
 
 import TrendingMovies from './movies'
-import TrendingSeries from './series'
 import TrendingPeople from './people'
+import TrendingSeries from './series'
 
+const Trending = () => {
+  const {
+    data: trendingMovies,
+    isLoading: isLoadingTrendingMovies,
+    error: trendingMoviesError,
+  } = api.movies.getTrending.useQuery()
 
-const Trending = async () => {
-  const trendingMovies = await api.movies.getTrending()
-  const trendingSeries = await api.series.getTrending()
-  const trendingPeople = await api.people.getTrending()
+  const {
+    data: trendingSeries,
+    isLoading: isLoadingTrendingSeries,
+    error: trendingSeriesError,
+  } = api.series.getTrending.useQuery()
 
-  console.log('trendingMovies', trendingMovies)
-  console.log('trendingSeries', trendingSeries)
-  console.log('trendingPeople', trendingPeople)
+  const {
+    data: trendingPeople,
+    isLoading: isLoadingTrendingPeople,
+    error: trendingPeopleError,
+  } = api.people.getTrending.useQuery()
+
+  if (isLoadingTrendingMovies || isLoadingTrendingSeries || isLoadingTrendingPeople) return <div>Loading...</div>
+  if (trendingMoviesError) return <div>Error: {trendingMoviesError.message} </div>
 
   return (
     <>
@@ -27,15 +39,15 @@ const Trending = async () => {
       </h1>
 
       <div className='mb-16'>
-        <TrendingMovies trendingMovies={trendingMovies} />
+        <TrendingMovies trendingMovies={trendingMovies!} />
       </div>
 
       <div className='mb-16'>
-        <TrendingSeries trendingSeries={trendingSeries} />
+        <TrendingSeries trendingSeries={trendingSeries!} />
       </div>
 
       <div className='mb-16'>
-        <TrendingPeople trendingPeople={trendingPeople} />
+        <TrendingPeople trendingPeople={trendingPeople!} />
       </div>
     </>
   )

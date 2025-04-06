@@ -1,15 +1,49 @@
-import type { TrendingPeopleResponse, } from 'types/person'
+import axios from 'axios'
+import { z, } from 'zod'
+
+import type { TrendingPeopleResponse, TMDBPersonDetails, TMDBPerson, } from '~/types/person'
 
 import { createTRPCRouter, publicProcedure, } from '~/server/api/trpc'
 
-export const peopleRouter = createTRPCRouter({
-  getTrending: publicProcedure.query<TrendingPeopleResponse>(async () => {
-    const trendingPeople = await fetch(
-      `https://api.themoviedb.org/3/trending/person/day?api_key=${process.env.TMDB_KEY}&include_adult=false`
-    )
-      .then((response) => response.json())
-      .then((data) => data as TrendingPeopleResponse)
+const TMDB_API_URL = 'https://api.themoviedb.org/3'
 
-    return trendingPeople
+export const peopleRouter = createTRPCRouter({
+  getTrending: publicProcedure.query<TMDBPerson[]>(async () => {
+    try {
+      const response = await axios.get<TrendingPeopleResponse>(
+        `${TMDB_API_URL}/trending/person/day`,
+        {
+          params: {
+            api_key: process.env.TMDB_KEY,
+            include_adult: false,
+          },
+        }
+      )
+
+      return response.data.results
+    } catch (error) {
+      throw new Error('Error fetching trending people from TMDB')
+    }
   }),
+
+  getDetails: publicProcedure
+    .input(z.object({ id: z.string(), }))
+    .query<TMDBPersonDetails>(async (opts) => {
+      const { id, } = opts.input
+      try {
+        const response = await axios.get<TMDBPersonDetails>(
+          `${TMDB_API_URL}/person/${id}`,
+          {
+            params: {
+              api_key: process.env.TMDB_KEY,
+              language: 'en-US',
+            },
+          }
+        )
+
+        return response.data
+      } catch (error) {
+        throw new Error('Error fetching series details from TMDB')
+      }
+    }),
 })
