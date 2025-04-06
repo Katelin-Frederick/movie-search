@@ -1,6 +1,7 @@
 'use client'
 
 import { format, } from 'date-fns'
+import Link from 'next/link'
 
 import Carousel from '~/components/Carousel/Carousel'
 import Button from '~/components/Button/Button'
@@ -54,6 +55,20 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
     return <div>Error loading movie details: {movieDetailsError.message}</div>
   }
 
+  const getSubtitle = () => {
+    let subtitle = 'Movie'
+
+    if (rating) {
+      subtitle = `${subtitle} | ${rating}`
+    }
+
+    if (movieDetails?.runtime ?? 0 > 0) {
+      subtitle = `${subtitle} | ${formatRuntime()}`
+    }
+
+    return subtitle
+  }
+
   const formatReleasedDate = () => {
     if (movieDetails?.release_date === '') {
       return 'N/A'
@@ -87,10 +102,11 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
 
   return (
     <div>
-      <h1 className='text-5xl mb-8 text-center lg:text-left font-bold'>{movieDetails?.title}</h1>
+      <h1 className='text-3xl md:text-4xl lg:text-5xl mb-3 text-center md:text-left font-bold'>{movieDetails?.title}</h1>
+      <p className='mb-3 text-center md:text-left'>{getSubtitle()}</p>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12'>
-        <div className='flex justify-start items-center flex-col'>
+        <div className='flex justify-start items-center md:items-start flex-col'>
           <div className='max-w-[350px] w-full relative'>
             <Poster
               src={`https://image.tmdb.org/t/p/w185/${movieDetails?.poster_path}`}
@@ -102,11 +118,11 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
             />
           </div>
 
-          <div className='flex flex-wrap justify-center items-center mt-4'>
+          <div className='flex flex-wrap max-w-[350px] justify-center items-center mt-4 w-full'>
             {movieDetails?.genres.map((genre) => (
               <div
                 key={genre.id}
-                className='py-1 px-1.5 bg-gray-800 rounded-xl mx-1 flex justify-center items-center text-sm font-bold text-yellow-500 border border-yellow-500'
+                className='py-1 px-1.5 my-1.5 bg-gray-800 rounded-xl mx-1 flex justify-center items-center text-sm font-bold text-yellow-500 border border-yellow-500'
               >
                 {genre.name}
               </div>
@@ -120,18 +136,6 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
               className='bg-gray-800 border-2 border-gray-100 p-4 rounded-t-md'
             >
               <span className='font-bold'>Released:</span> {formatReleasedDate()}
-            </li>
-
-            <li
-              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
-            >
-              <span className='font-bold'>Runtime:</span> {formatRuntime()}
-            </li>
-
-            <li
-              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
-            >
-              <span className='font-bold'>Rated:</span> {rating === '' ? 'N/A' : rating}
             </li>
 
             <li
@@ -255,6 +259,12 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
           <Carousel data={recommended?.results ?? []} />
         </div>
       )}
+
+      <Link
+        href='/'
+      >
+        <Button variant='secondary' className='mt-8'>Back to Search</Button>
+      </Link>
     </div>
   )
 }

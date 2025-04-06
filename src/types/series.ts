@@ -125,3 +125,12 @@ export interface TMDBSeriesDetails extends TMDBSeries {
   name: string,
   id: number,
 }
+
+export interface Certification {
+  iso_3166_1: string
+  rating: string
+}
+
+export interface ContentRatingsResponse {
+  results: Certification[]
+}

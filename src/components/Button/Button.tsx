@@ -18,7 +18,7 @@ const Button = ({ children, variant = 'primary', ...props }: ButtonProps) => {
     )
   }
 
-  (
+  return (
     <button
       {...props}
       className={cn('border-2 border-yellow-500 bg-gray-800/70 px-3 py-1 rounded-sm text-white font-bold hover:text-yellow-500 hover:shadow-md hover:shadow-yellow-500', props.className)}

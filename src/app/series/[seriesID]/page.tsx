@@ -8,10 +8,10 @@ const SeriesDetailsPage = async ({ params, }: {
   console.log('seriesID', seriesID)
 
   return (
-    <div>
-      <p>details</p>
-
-      <SeriesDetails seriesID={seriesID} />
+    <div className='flex flex-col justify-center items-center'>
+      <div className='container py-14'>
+        <SeriesDetails seriesID={seriesID} />
+      </div>
     </div>
   )
 }
