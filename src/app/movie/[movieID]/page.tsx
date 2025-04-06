@@ -8,9 +8,11 @@ const MovieDetailsPage = async ({ params, }: {
   console.log('movieID', movieID)
 
   return (
-    <>
-      <MovieDetails movieID={movieID} />
-    </>
+    <div className='flex flex-col justify-center items-center'>
+      <div className='container py-14'>
+        <MovieDetails movieID={movieID} />
+      </div>
+    </div>
   )
 }
 

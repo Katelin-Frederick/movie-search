@@ -6,7 +6,7 @@ import Trending from './_trending/page'
 const Home = async () => (
   <HydrateClient>
     <main className='flex flex-col justify-center items-center'>
-      <div className='container py-18'>
+      <div className='container py-14'>
         <Trending />
       </div>
     </main>

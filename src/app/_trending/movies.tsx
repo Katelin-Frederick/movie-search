@@ -1,8 +1,8 @@
 'use client'
 
-import type { TMDBMovie, } from 'types/movies'
-
 import 'swiper/css/navigation'
+
+import type { TMDBMovie, } from '~/types/movies'
 
 import Carousel from '~/components/Carousel/Carousel'
 import { rockSalt, } from '~/fonts'

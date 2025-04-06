@@ -1,14 +1,12 @@
 'use client'
 
-
 import 'swiper/css/navigation'
-
-import type { TMDBSeries, } from 'types/series'
-import type { TMDBPerson, } from 'types/person'
-import type { TMDBMovie, } from 'types/movies'
-
 import { Mousewheel, Navigation, Pagination, Autoplay, Keyboard, Virtual, A11y, } from 'swiper/modules'
 import { SwiperSlide, Swiper, } from 'swiper/react'
+
+import type { TMDBSeries, } from '~/types/series'
+import type { TMDBPerson, } from '~/types/person'
+import type { TMDBMovie, } from '~/types/movies'
 
 import Series from './CarouselCards/Series'
 import Person from './CarouselCards/Person'
@@ -62,7 +60,7 @@ const Carousel = ({ type = 'movies', data, }: CarouselProps) => (
       <>
         {data.map((movie) => (
           <SwiperSlide key={movie.id}>
-            <Movie movie={movie as TMDBMovie} />
+            <Movie movie={movie} />
           </SwiperSlide>
         ))}
       </>

@@ -1,10 +1,9 @@
 'use client'
 
 import 'swiper/css/navigation'
-
-import type { TMDBSeries, } from 'types/series'
-
 import { useRouter, } from 'next/navigation'
+
+import type { TMDBSeries, } from '~/types/series'
 
 import Button from '~/components/Button/Button'
 import Poster from '~/components/Poster/Poster'
@@ -20,6 +19,8 @@ const Series = ({ series, }: { series: TMDBSeries }) => {
           src={`https://image.tmdb.org/t/p/w185/${series.poster_path}`}
           alt={series.name}
           fallbackMessage={`No Poster for ${series.name}`}
+          fill
+          className='rounded-t-sm'
         />
       </div>
 

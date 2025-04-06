@@ -1,24 +1,25 @@
 'use client'
 
-import type { TMDBMovie, } from 'types/movies'
-
 import 'swiper/css/navigation'
 import { useRouter, } from 'next/navigation'
 
+import type { TMDBMovie, } from '~/types/movies'
+
 import Button from '~/components/Button/Button'
 import Poster from '~/components/Poster/Poster'
-import { cn, } from '~/lib/utils'
 
 const Movie = ({ movie, }: { movie: TMDBMovie }) => {
   const router = useRouter()
 
   return (
     <div className='h-full flex flex-col'>
-      <div className={cn('relative w-[270] h-[270] md:w-[300] md:h-[300] xl:w-[280] xl:h-[280] border-b-5 border-yellow-500 flex-none')}>
+      <div className='relative w-[270] h-[270] md:w-[300] md:h-[300] xl:w-[280] xl:h-[280] border-b-5 border-yellow-500 flex-none'>
         <Poster
           src={`https://image.tmdb.org/t/p/w185/${movie.poster_path}`}
           alt={movie.title}
           fallbackMessage={`No Poster for ${movie.title}`}
+          fill
+          className='rounded-t-sm'
         />
       </div>
 

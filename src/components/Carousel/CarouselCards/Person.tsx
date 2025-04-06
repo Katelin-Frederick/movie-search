@@ -1,10 +1,9 @@
 'use client'
 
 import 'swiper/css/navigation'
-
-import type { TMDBPerson, } from 'types/person'
-
 import { useRouter, } from 'next/navigation'
+
+import type { TMDBPerson, } from '~/types/person'
 
 import Button from '~/components/Button/Button'
 import Poster from '~/components/Poster/Poster'
@@ -20,6 +19,8 @@ const Person = ({ person, }: { person: TMDBPerson }) => {
           src={`https://image.tmdb.org/t/p/w185/${person.profile_path}`}
           alt={person.name}
           fallbackMessage={`No Poster for ${person.name}`}
+          fill
+          className='rounded-t-sm'
         />
       </div>
 
