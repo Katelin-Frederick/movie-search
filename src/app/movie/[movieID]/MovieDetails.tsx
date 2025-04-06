@@ -2,9 +2,12 @@
 
 import { format, } from 'date-fns'
 
+import Carousel from '~/components/Carousel/Carousel'
 import Button from '~/components/Button/Button'
 import Poster from '~/components/Poster/Poster'
 import { api, } from '~/trpc/react'
+import { rockSalt, } from '~/fonts'
+import { cn, } from '~/lib/utils'
 
 const MovieDetails = ({ movieID, }: { movieID: string }) => {
   const { data: movieDetails, isLoading: isMovieDetailsLoading, error: movieDetailsError, } = api.movies.getDetails.useQuery(
@@ -22,7 +25,28 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
     { enabled: !!movieID, }
   )
 
-  if (isMovieDetailsLoading || isRatingLoading || isCreditsLoading) {
+  const { data: providers, isLoading: isProvidersLoading, error: providersError, } = api.movies.getProviders.useQuery(
+    { id: movieID, },
+    { enabled: !!movieID, }
+  )
+
+  const { data: collection, isLoading: isCollectionLoading, error: collectionError, } = api.movies.getCollection.useQuery(
+    { collectionId: movieDetails?.belongs_to_collection?.id ?? null, },
+    { enabled: !!movieID, }
+  )
+
+  const { data: recommended, isLoading: isRecommendedLoading, error: RecommendedError, } = api.movies.getRecommended.useQuery(
+    { id: movieID, },
+    { enabled: !!movieID, }
+  )
+
+  if (isMovieDetailsLoading
+    || isRatingLoading
+    || isCreditsLoading
+    || isProvidersLoading
+    || isCollectionLoading
+    || isRecommendedLoading
+  ) {
     return <div>Loading...</div>
   }
 
@@ -31,6 +55,10 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
   }
 
   const formatReleasedDate = () => {
+    if (movieDetails?.release_date === '') {
+      return 'N/A'
+    }
+
     const releaseDate = new Date(movieDetails?.release_date ?? '')
 
     const formattedReleaseDate = format(releaseDate, 'MMMM dd, yyyy')
@@ -78,7 +106,7 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
             {movieDetails?.genres.map((genre) => (
               <div
                 key={genre.id}
-                className='py-1 px-1.5 bg-gray-800 rounded-4xl mx-1 flex justify-center items-center text-sm font-bold text-yellow-500 border border-yellow-500'
+                className='py-1 px-1.5 bg-gray-800 rounded-xl mx-1 flex justify-center items-center text-sm font-bold text-yellow-500 border border-yellow-500'
               >
                 {genre.name}
               </div>
@@ -166,13 +194,25 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
             </>
           )}
 
-          <a
-            href={`http://imdb.com/title/${movieDetails?.imdb_id}`}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <Button className='mt-8 block'>View on IMDB</Button>
-          </a>
+          <div className={cn(providers && 'flex flex-wrap')}>
+            {providers && (
+              <a
+                href={providers}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <Button className='mt-8 mr-4'>Where to Watch</Button>
+              </a>
+            )}
+
+            <a
+              href={`http://imdb.com/title/${movieDetails?.imdb_id}`}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <Button className='mt-8'>View on IMDB</Button>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -180,6 +220,41 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
       <p className='my-3'><span className='font-bold'>Producers:</span> {getProducers()}</p>
       <p className='my-3'><span className='font-bold'>Production Companies:</span> {getProductionCompanies()}</p>
       <p className='my-3'><span className='font-bold'>Production Countries:</span> {getProductionCountries()}</p>
+
+      <div className='mt-12'>
+        <h2
+          className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
+        >
+          Cast
+        </h2>
+        <Carousel type='cast' data={credits?.cast ?? []} />
+      </div>
+
+      {collection !== null && (
+        <div className='mt-12'>
+          <h2
+            className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
+          >
+            {collection?.name}
+          </h2>
+
+          <p className='mb-4'>{collection?.overview}</p>
+
+          <Carousel data={collection?.parts ?? []} />
+        </div>
+      )}
+
+      {recommended?.results && recommended.results.length > 0 && (
+        <div className='mt-12'>
+          <h2
+            className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
+          >
+            Recommended
+          </h2>
+
+          <Carousel data={recommended?.results ?? []} />
+        </div>
+      )}
     </div>
   )
 }

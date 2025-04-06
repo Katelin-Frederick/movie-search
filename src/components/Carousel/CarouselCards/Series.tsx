@@ -14,7 +14,7 @@ const Series = ({ series, }: { series: TMDBSeries }) => {
 
   return (
     <div className='h-full flex flex-col'>
-      <div className={cn('relative w-[270] h-[270] md:w-[300] md:h-[300] xl:w-[280] xl:h-[280] border-b-5 border-yellow-500 flex-none')}>
+      <div className={cn('relative w-[270] h-[300] md:w-[300] md:h-[330] xl:w-[280] xl:h-[310] border-b-5 border-yellow-500 flex-none')}>
         <Poster
           src={`https://image.tmdb.org/t/p/w185/${series.poster_path}`}
           alt={series.name}
@@ -25,7 +25,7 @@ const Series = ({ series, }: { series: TMDBSeries }) => {
       </div>
 
       <div className='bg-gray-800 border-3 border-gray-100 border-t-0 px-3 py-4 flex justify-center items-center flex-col w-[270] md:w-[300] xl:w-[280] rounded-b-sm grow h-full shadow-lg shadow-yellow-500'>
-        <p>{series.name}</p>
+        <p className='text-2xl font-bold'>{series.name}</p>
 
         <Button className='mt-4' onClick={() => router.push(`/series/${series.id}`)}>View Details</Button>
       </div>

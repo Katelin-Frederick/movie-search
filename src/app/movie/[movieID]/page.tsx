@@ -5,8 +5,6 @@ const MovieDetailsPage = async ({ params, }: {
 }) => {
   const { movieID, } = await params
 
-  console.log('movieID', movieID)
-
   return (
     <div className='flex flex-col justify-center items-center'>
       <div className='container py-14'>

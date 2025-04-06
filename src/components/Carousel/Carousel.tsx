@@ -4,6 +4,8 @@ import 'swiper/css/navigation'
 import { Mousewheel, Navigation, Pagination, Autoplay, Keyboard, Virtual, A11y, } from 'swiper/modules'
 import { SwiperSlide, Swiper, } from 'swiper/react'
 
+import type { RecommendedMovie, } from '~/types/recommended'
+import type { CastMember, } from '~/types/credits'
 import type { TMDBSeries, } from '~/types/series'
 import type { TMDBPerson, } from '~/types/person'
 import type { TMDBMovie, } from '~/types/movies'
@@ -11,10 +13,11 @@ import type { TMDBMovie, } from '~/types/movies'
 import Series from './CarouselCards/Series'
 import Person from './CarouselCards/Person'
 import Movie from './CarouselCards/Movie'
+import Cast from './CarouselCards/Cast'
 
 interface CarouselProps {
-  data: TMDBMovie[] | TMDBSeries[] | TMDBPerson[]
-  type?: 'movies' | 'series' | 'people'
+  data: TMDBMovie[] | TMDBSeries[] | TMDBPerson[] | CastMember[] | RecommendedMovie[]
+  type?: 'movies' | 'series' | 'people' | 'cast'
 }
 
 const Carousel = ({ type = 'movies', data, }: CarouselProps) => (
@@ -60,7 +63,7 @@ const Carousel = ({ type = 'movies', data, }: CarouselProps) => (
       <>
         {data.map((movie) => (
           <SwiperSlide key={movie.id}>
-            <Movie movie={movie} />
+            <Movie movie={movie as TMDBMovie} />
           </SwiperSlide>
         ))}
       </>
@@ -81,6 +84,16 @@ const Carousel = ({ type = 'movies', data, }: CarouselProps) => (
         {data.map((person) => (
           <SwiperSlide key={person.id}>
             <Person person={person as TMDBPerson} />
+          </SwiperSlide>
+        ))}
+      </>
+    )}
+
+    {type === 'cast' && (
+      <>
+        {data.map((castMember) => (
+          <SwiperSlide key={castMember.id}>
+            <Cast castMember={castMember as CastMember} />
           </SwiperSlide>
         ))}
       </>

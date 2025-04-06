@@ -32,6 +32,12 @@ export interface TMDBMovieDetails extends TMDBMovie {
       origin_country: string
     }
   ],
+  belongs_to_collection: null | {
+    backdrop_path: string,
+    id: number,
+    name: string,
+    poster_path: string,
+  },
   spoken_languages: [
     {
       english_name: string,
@@ -51,7 +57,6 @@ export interface TMDBMovieDetails extends TMDBMovie {
       name: string
     }
   ],
-  belongs_to_collection: null | boolean,
   origin_country: [
     string
   ],
