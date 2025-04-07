@@ -134,3 +134,24 @@ export interface Certification {
 export interface ContentRatingsResponse {
   results: Certification[]
 }
+
+export interface SeasonDetail {
+  episodes: Array<{
+    air_date: string
+    episode_number: number
+    id: number
+    name: string
+    overview: string
+    still_path: string | null
+    vote_average: number
+    vote_count: number
+    season_number: number
+    runtime: number
+  }>
+  poster_path: string | null
+  air_date: string | null
+  season_number: number
+  overview: string
+  name: string
+  id: number
+}

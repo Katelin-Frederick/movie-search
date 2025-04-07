@@ -63,7 +63,7 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
     }
 
     if (movieDetails?.runtime ?? 0 > 0) {
-      subtitle = `${subtitle} | ${formatRuntime()}`
+      subtitle = `${subtitle} | ${formatRuntime(movieDetails?.runtime ?? 0)}`
     }
 
     return subtitle
@@ -81,11 +81,15 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
     return formattedReleaseDate
   }
 
-  const formatRuntime = () => {
-    const hours = Math.floor((movieDetails?.runtime ?? 0) / 60)
-    const remainingMinutes = (movieDetails?.runtime ?? 0) % 60
+  const formatRuntime = (runtime: number) => {
+    const hours = Math.floor((runtime ?? 0) / 60)
+    const remainingMinutes = (runtime ?? 0) % 60
 
-    return `${hours}h ${remainingMinutes}m`
+    if (hours !== 0) {
+      return `${hours}h ${remainingMinutes}m`
+    }
+
+    return `${remainingMinutes}m`
   }
 
   const formatMoney = (amount: number) => new Intl.NumberFormat('en-US', {

@@ -20,3 +20,9 @@ export interface CreditsResponse {
   cast: CastMember[]  // Array of cast members
   crew: CrewMember[]  // Array of crew members
 }
+
+export interface AggregateCreditsResponse {
+  cast: { id: number; name: string; character: string }[];
+  crew: { id: number; name: string; job: string }[];
+  // Add other fields based on the TMDB response data.
+}

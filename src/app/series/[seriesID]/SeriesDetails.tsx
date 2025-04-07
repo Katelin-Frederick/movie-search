@@ -1,6 +1,7 @@
 'use client'
 
-import { format, } from 'date-fns'
+import { addDays, format, } from 'date-fns'
+import Link from 'next/link'
 
 import Poster from '~/components/Poster/Poster'
 import Button from '~/components/Button/Button'
@@ -28,6 +29,51 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
     { enabled: !!seriesID, }
   )
 
+  const {
+    data: aggregateCredits,
+    isLoading: isAggregateCreditsLoading,
+    error: aggregateCreditsError,
+  } = api.series.getAggregateCredits.useQuery(
+    { id: seriesID, },
+    { enabled: !!seriesID, }
+  )
+
+  const {
+    data: recommendations,
+    isLoading: isRecommendationsLoading,
+    error: recommendationsError,
+  } = api.series.getRecommended.useQuery(
+    { id: seriesID, },
+    { enabled: !!seriesID, }
+  )
+
+  const {
+    data: similar,
+    isLoading: isSimilarLoading,
+    error: similarError,
+  } = api.series.getSimilar.useQuery(
+    { id: seriesID, },
+    { enabled: !!seriesID, }
+  )
+
+  const {
+    data: videos,
+    isLoading: isVideosLoading,
+    error: videosError,
+  } = api.series.getVideos.useQuery(
+    { id: seriesID, },
+    { enabled: !!seriesID, }
+  )
+
+  const seasonNumberList = seriesDetails?.seasons.map((season) => season.season_number)
+
+  const { data: seasonDetails, isLoading: isSeasonDetailsLoading, error: seasonDetailsError, } = api.series.getSeasonDetails.useQuery(
+    { seriesId: seriesID, seasonNumbers: seasonNumberList ?? [], },
+    { enabled: !!seriesID, }
+  )
+
+  console.log('videos', videos)
+
   const getSubtitle = () => {
     let subtitle = 'TV Series'
 
@@ -43,7 +89,8 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
       return 'N/A'
     }
 
-    const newDate = new Date(date ?? '')
+    // const newDate = new Date(date ?? '')
+    const newDate = new Date(addDays(new Date(date ?? ''), 1))
 
     const formattedDate = format(newDate, 'MMMM dd, yyyy')
 
@@ -52,6 +99,7 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
 
   const getCreatedBy = () => seriesDetails?.created_by.map((item) => item.name).join(', ')
   const getLanguages = () => seriesDetails?.spoken_languages.map((language) => language.name).join(', ')
+  const getNetworks = () => seriesDetails?.networks.map((network) => network.name).join(', ')
   const getProductionCompanies = () => seriesDetails?.production_companies.map((company) => company.name).join(', ')
   const getProductionCountries = () => seriesDetails?.production_countries.map((country) => country.name).join(', ')
 
@@ -80,6 +128,13 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
               className='rounded-sm'
             />
           </div>
+
+          <Link
+            href={`/series/${seriesID}/seasons`}
+            className='inline-block mb-3 font-bold text-yellow-500 hover:text-white underline'
+          >
+            View Seasons
+          </Link>
 
           <div className='flex flex-wrap max-w-[350px] justify-center items-center mt-4 w-full'>
             {seriesDetails?.genres.map((genre) => (
@@ -129,6 +184,12 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
               className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
             >
               <span className='font-bold'>Episodes:</span> {seriesDetails?.number_of_episodes}
+            </li>
+
+            <li
+              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
+            >
+              <span className='font-bold'>Networks:</span> {getNetworks()}
             </li>
 
             <li

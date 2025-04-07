@@ -189,6 +189,7 @@ export const movieRouter = createTRPCRouter({
             params: {
               api_key: process.env.TMDB_KEY,
               include_adult: false,
+              language: 'en-US',
             },
           }
         )
