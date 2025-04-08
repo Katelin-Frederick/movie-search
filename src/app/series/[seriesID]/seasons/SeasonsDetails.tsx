@@ -3,6 +3,7 @@
 import { AccordionTab, Accordion, } from 'primereact/accordion'
 import { TabPanel, TabView, } from 'primereact/tabview'
 import { addDays, format, } from 'date-fns'
+import Link from 'next/link'
 
 import Poster from '~/components/Poster/Poster'
 import { api, } from '~/trpc/react'
@@ -171,9 +172,14 @@ const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
                     </div>
 
                     <div className=' ml-0 md:ml-6 grow'>
-                      <h3 className='text-2xl'>
-                        <span className='font-bold'>{`S${episode.season_number} E${episode.episode_number}`}</span>{` - ${episode.name}`}
-                      </h3>
+                      <Link
+                        href={`/series/${seriesID}/seasons/${episode.season_number}/episode/${episode.episode_number}`}
+                        className='text-2xl hover:underline hover:text-gray-100'
+                      >
+                        <h3>
+                          <span className='font-bold'>{`S${episode.season_number} E${episode.episode_number}`}</span>{` - ${episode.name}`}
+                        </h3>
+                      </Link>
 
                       <p className='m-0'><span className='font-bold'>Air Date:</span> {formatDate(episode.air_date ?? '')}</p>
                       <p className='m-0'><span className='font-bold'>Runtime:</span> {formatRuntime(episode.runtime)}</p>

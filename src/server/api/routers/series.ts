@@ -1,7 +1,7 @@
-import axios from 'axios'
+import axios, { type AxiosResponse, } from 'axios'
 import { z, } from 'zod'
 
-import type { TrendingSeriesResponse, ContentRatingsResponse, TMDBSeriesDetails, SeasonDetail, TMDBSeries, } from '~/types/series'
+import type { TrendingSeriesResponse, ContentRatingsResponse, EpisodeCreditsResponse, TMDBSeriesDetails, EpisodeDetails, SeasonDetail, TMDBSeries, } from '~/types/series'
 import type { RecommendedSeriesResponse, } from '~/types/recommended'
 import type { AggregateCreditsResponse, } from '~/types/credits'
 import type { ExternalIdsResponse, } from '~/types/externalIds'
@@ -294,6 +294,64 @@ export const seriesRouter = createTRPCRouter({
         } else {
           throw new Error('Error fetching videos from TMDB')
         }
+      }
+    }),
+
+  getEpisodeDetails: publicProcedure
+    .input(
+      z.object({
+        seriesId: z.string(),
+        seasonNumber: z.string(),
+        episodeNumber: z.string(),
+      })
+    )
+    .query(async (opts) => {
+      const { seriesId, seasonNumber, episodeNumber, } = opts.input
+
+      try {
+        // Call the TMDB API and type the response
+        const response: AxiosResponse<EpisodeDetails> = await axios.get(
+          `${TMDB_API_URL}/tv/${seriesId}/season/${seasonNumber}/episode/${episodeNumber}`,
+          {
+            params: {
+              api_key: process.env.TMDB_KEY,
+              language: 'en-US',
+            },
+          }
+        )
+
+        return response.data
+      } catch (error) {
+        throw new Error('Error fetching series details from TMDB')
+      }
+    }),
+
+  getEpisodeCredits: publicProcedure
+    .input(
+      z.object({
+        seriesId: z.string(),
+        seasonNumber: z.string(),
+        episodeNumber: z.string(),
+      })
+    )
+    .query(async (opts) => {
+      const { seriesId, seasonNumber, episodeNumber, } = opts.input
+
+      try {
+        const response: AxiosResponse<EpisodeCreditsResponse> = await axios.get(
+          `${TMDB_API_URL}/tv/${seriesId}/season/${seasonNumber}/episode/${episodeNumber}/credits`,
+          {
+            params: {
+              api_key: process.env.TMDB_KEY,
+              language: 'en-US',
+            },
+          }
+        )
+
+        return response.data
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        throw new Error(`Error fetching episode credits from TMDB: ${errorMessage}`)
       }
     }),
 })

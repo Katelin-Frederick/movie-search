@@ -155,3 +155,71 @@ export interface SeasonDetail {
   name: string
   id: number
 }
+
+export interface EpisodeDetails {
+  guest_stars: [
+    {
+      character: string,
+      credit_id: string,
+      order: number,
+      adult: boolean,
+      gender: number,
+      id: number,
+      known_for_department: string,
+      name: string,
+      original_name: string,
+      popularity: number,
+      profile_path: string,
+    }
+  ],
+  crew: [
+    {
+      job: string,
+      department: string,
+      credit_id: string,
+      adult: boolean,
+      gender: number,
+      id: number,
+      known_for_department: string,
+      name: string,
+      original_name: string,
+      popularity: number,
+      profile_path: string
+    }
+  ],
+  production_code: string,
+  episode_number: number,
+  season_number: number,
+  vote_average: number,
+  still_path: string,
+  vote_count: number
+  overview: string,
+  air_date: string,
+  runtime: number,
+  name: string,
+  id: number,
+}
+
+export interface CastMember {
+  character: string;
+  name: string;
+  id: number;
+}
+
+export interface CrewMember {
+  name: string;
+  job: string;
+  id: number;
+}
+
+export interface GuestStar {
+  character: string;
+  name: string;
+  id: number;
+}
+
+export interface EpisodeCreditsResponse {
+  guest_stars: GuestStar[]
+  cast: CastMember[];
+  crew: CrewMember[];
+}
