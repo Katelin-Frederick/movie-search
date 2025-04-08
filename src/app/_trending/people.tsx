@@ -1,9 +1,8 @@
 'use client'
 
-
 import 'swiper/css/navigation'
 
-import type { TMDBPerson, } from 'types/person'
+import type { TMDBPerson, } from '~/types/person'
 
 import Carousel from '~/components/Carousel/Carousel'
 import { rockSalt, } from '~/fonts'

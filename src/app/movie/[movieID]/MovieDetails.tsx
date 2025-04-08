@@ -121,17 +121,6 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
               className='rounded-sm'
             />
           </div>
-
-          <div className='flex flex-wrap max-w-[350px] justify-center items-center mt-4 w-full'>
-            {movieDetails?.genres.map((genre) => (
-              <div
-                key={genre.id}
-                className='py-1 px-1.5 my-1.5 bg-gray-800 rounded-xl mx-1 flex justify-center items-center text-sm font-bold text-yellow-500 border border-yellow-500'
-              >
-                {genre.name}
-              </div>
-            ))}
-          </div>
         </div>
 
         <div className='flex justify-center items-start my-12 md:my-0'>
@@ -181,6 +170,17 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
         </div>
 
         <div className='md:col-span-2 lg:col-span-1'>
+          <div className='flex flex-wrap max-w-[350px] justify-center items-center mb-4 w-full'>
+            {movieDetails?.genres.map((genre) => (
+              <div
+                key={genre.id}
+                className='py-1 px-1.5 my-1.5 bg-gray-800 rounded-xl mx-1 flex justify-center items-center text-sm font-bold text-yellow-500 border border-yellow-500'
+              >
+                {genre.name}
+              </div>
+            ))}
+          </div>
+
           <h2 className='text-3xl'>Plot:</h2>
           <p>{movieDetails?.overview}</p>
 

@@ -1,7 +1,8 @@
 'use client'
 
 import 'swiper/css/navigation'
-import type { TMDBSeries, } from 'types/series'
+
+import type { TMDBSeries, } from '~/types/series'
 
 import Carousel from '~/components/Carousel/Carousel'
 import { rockSalt, } from '~/fonts'

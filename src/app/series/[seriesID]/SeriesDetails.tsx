@@ -3,9 +3,11 @@
 import { addDays, format, } from 'date-fns'
 import Link from 'next/link'
 
+import Carousel from '~/components/Carousel/Carousel'
 import Poster from '~/components/Poster/Poster'
 import Button from '~/components/Button/Button'
 import { api, } from '~/trpc/react'
+import { rockSalt, } from '~/fonts'
 import { cn, } from '~/lib/utils'
 
 const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
@@ -39,9 +41,9 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
   )
 
   const {
-    data: recommendations,
-    isLoading: isRecommendationsLoading,
-    error: recommendationsError,
+    data: recommended,
+    isLoading: isRecommendedLoading,
+    error: recommendedError,
   } = api.series.getRecommended.useQuery(
     { id: seriesID, },
     { enabled: !!seriesID, }
@@ -89,7 +91,6 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
       return 'N/A'
     }
 
-    // const newDate = new Date(date ?? '')
     const newDate = new Date(addDays(new Date(date ?? ''), 1))
 
     const formattedDate = format(newDate, 'MMMM dd, yyyy')
@@ -124,28 +125,18 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
               alt={seriesDetails?.name ?? ''}
               fallbackMessage={`No Poster for ${seriesDetails?.name}`}
               width={300}
-              height={200}
+              height={300}
               className='rounded-sm'
             />
           </div>
 
-          <Link
-            href={`/series/${seriesID}/seasons`}
-            className='inline-block mb-3 font-bold text-yellow-500 hover:text-white underline'
-          >
-            View Seasons
-          </Link>
-
-          <div className='flex flex-wrap max-w-[350px] justify-center items-center mt-4 w-full'>
-            {seriesDetails?.genres.map((genre) => (
-              <div
-                key={genre.id}
-                className='py-1 px-1.5 my-1.5 bg-gray-800 rounded-xl mx-1 flex justify-center items-center text-sm font-bold text-yellow-500 border border-yellow-500'
-              >
-                {genre.name}
-              </div>
-            ))}
-          </div>
+          <Button className='my-3'>
+            <Link
+              href={`/series/${seriesID}/seasons`}
+            >
+              View Seasons
+            </Link>
+          </Button>
         </div>
 
         <div className='flex justify-center lg:justify-start items-start my-12 md:my-0'>
@@ -207,6 +198,17 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
         </div>
 
         <div className='md:col-span-2 lg:col-span-1'>
+          <div className='flex flex-wrap justify-start lg:justify-center items-center mb-4 w-full'>
+            {seriesDetails?.genres.map((genre) => (
+              <div
+                key={genre.id}
+                className='py-1 px-1.5 my-1.5 bg-gray-800 rounded-xl mx-1 flex justify-center items-center text-sm font-bold text-yellow-500 border border-yellow-500'
+              >
+                {genre.name}
+              </div>
+            ))}
+          </div>
+
           <h2 className='text-3xl'>Plot:</h2>
           <p>{seriesDetails?.overview}</p>
 
@@ -253,6 +255,39 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
       <h2 className='text-3xl'>Production Information:</h2>
       <p className='my-3'><span className='font-bold'>Production Companies:</span> {getProductionCompanies()}</p>
       <p className='my-3'><span className='font-bold'>Production Countries:</span> {getProductionCountries()}</p>
+
+      <div className='mt-12'>
+        <h2
+          className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
+        >
+          Cast
+        </h2>
+        <Carousel type='people' data={aggregateCredits?.cast.slice(0, 20) ?? []} />
+      </div>
+
+      {similar?.results && similar.results.length > 0 && (
+        <div className='mt-12'>
+          <h2
+            className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
+          >
+            Similar
+          </h2>
+
+          <Carousel type='series' data={similar?.results ?? []} />
+        </div>
+      )}
+
+      {recommended?.results && recommended.results.length > 0 && (
+        <div className='mt-12'>
+          <h2
+            className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
+          >
+            Recommended
+          </h2>
+
+          <Carousel type='series' data={recommended?.results ?? []} />
+        </div>
+      )}
     </div>
   )
 }

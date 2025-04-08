@@ -237,15 +237,28 @@ body {
   font-weight: 300;
 }
 
-.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+.p-tabview .p-tabview-nav {
   border-color: #FACC15;
-  color: #FACC15;
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  border-color: #FACC15;
+}
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  border-color: #222222;
+  background: #FACC15;
+  color: #222222;
   font-weight: 700;
 }
 
 .p-tabview .p-tabview-nav-btn.p-link {
   background: #FACC15;
   color: #222222;
+}
+
+.p-tabview .p-tabview-panels {
+  background: #666666;
 }
 
 @layer base {
