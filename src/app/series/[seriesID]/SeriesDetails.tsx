@@ -1,32 +1,47 @@
 'use client'
 
-import { addDays, format, } from 'date-fns'
 import Link from 'next/link'
 
+import { getSubtitle, formatDate, cn, } from '~/lib/utils'
 import Carousel from '~/components/Carousel/Carousel'
 import Poster from '~/components/Poster/Poster'
 import Button from '~/components/Button/Button'
 import { api, } from '~/trpc/react'
 import { rockSalt, } from '~/fonts'
-import { cn, } from '~/lib/utils'
 
 const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
-  const { data: seriesDetails, isLoading, error: seriesDetailsError, } = api.series.getDetails.useQuery(
+  const {
+    data: seriesDetails,
+    isLoading,
+    error: seriesDetailsError,
+  } = api.series.getDetails.useQuery(
     { id: seriesID, },
     { enabled: !!seriesID, }
   )
 
-  const { data: externalIds, isLoading: isExternalIdsLoading, error: externalIdsError, } = api.series.getExternalIds.useQuery(
+  const {
+    data: externalIds,
+    isLoading: isExternalIdsLoading,
+    error: externalIdsError,
+  } = api.series.getExternalIds.useQuery(
     { id: seriesID, },
     { enabled: !!seriesID, }
   )
 
-  const { data: providers, isLoading: isProvidersLoading, error: providersError, } = api.series.getProviders.useQuery(
+  const {
+    data: providers,
+    isLoading: isProvidersLoading,
+    error: providersError,
+  } = api.series.getProviders.useQuery(
     { id: seriesID, },
     { enabled: !!seriesID, }
   )
 
-  const { data: rating, isLoading: isRatingLoading, error: ratingError, } = api.series.getRating.useQuery(
+  const {
+    data: rating,
+    isLoading: isRatingLoading,
+    error: ratingError,
+  } = api.series.getRating.useQuery(
     { id: seriesID, },
     { enabled: !!seriesID, }
   )
@@ -58,46 +73,6 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
     { enabled: !!seriesID, }
   )
 
-  const {
-    data: videos,
-    isLoading: isVideosLoading,
-    error: videosError,
-  } = api.series.getVideos.useQuery(
-    { id: seriesID, },
-    { enabled: !!seriesID, }
-  )
-
-  const seasonNumberList = seriesDetails?.seasons.map((season) => season.season_number)
-
-  const { data: seasonDetails, isLoading: isSeasonDetailsLoading, error: seasonDetailsError, } = api.series.getSeasonDetails.useQuery(
-    { seriesId: seriesID, seasonNumbers: seasonNumberList ?? [], },
-    { enabled: !!seriesID, }
-  )
-
-  console.log('videos', videos)
-
-  const getSubtitle = () => {
-    let subtitle = 'TV Series'
-
-    if (rating) {
-      subtitle = `${subtitle} | ${rating}`
-    }
-
-    return subtitle
-  }
-
-  const formatDate = (date: string) => {
-    if (date === '') {
-      return 'N/A'
-    }
-
-    const newDate = new Date(addDays(new Date(date ?? ''), 1))
-
-    const formattedDate = format(newDate, 'MMMM dd, yyyy')
-
-    return formattedDate
-  }
-
   const getCreatedBy = () => seriesDetails?.created_by.map((item) => item.name).join(', ')
   const getLanguages = () => seriesDetails?.spoken_languages.map((language) => language.name).join(', ')
   const getNetworks = () => seriesDetails?.networks.map((network) => network.name).join(', ')
@@ -115,7 +90,7 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
   return (
     <div>
       <h1 className='text-3xl md:text-4xl lg:text-5xl mb-3 text-center md:text-left font-bold'>{seriesDetails?.name}</h1>
-      <p className='mb-3 text-center md:text-left'>{getSubtitle()}</p>
+      <p className='mb-3 text-center md:text-left'>{getSubtitle('series', rating ?? 'N/A')}</p>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12'>
         <div className='flex justify-start items-center md:items-start flex-col'>
@@ -288,6 +263,12 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
           <Carousel type='series' data={recommended?.results ?? []} />
         </div>
       )}
+
+      <Link
+        href='/'
+      >
+        <Button variant='secondary' className='mt-8'>Back to Search</Button>
+      </Link>
     </div>
   )
 }

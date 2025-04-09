@@ -6,7 +6,6 @@ import type { RecommendedSeriesResponse, } from '~/types/recommended'
 import type { AggregateCreditsResponse, } from '~/types/credits'
 import type { ExternalIdsResponse, } from '~/types/externalIds'
 import type { SimilarSeriesResponse, } from '~/types/similar'
-import type { VideosResponse, Video, } from '~/types/videos'
 import type { ProvidersResponse, } from '~/types/providers'
 
 import { createTRPCRouter, publicProcedure, } from '~/server/api/trpc'
@@ -54,7 +53,7 @@ export const seriesRouter = createTRPCRouter({
     }),
 
   getRating: publicProcedure
-    .input(z.object({ id: z.string(), })) // TV Series ID as string
+    .input(z.object({ id: z.string(), }))
     .query<string>(async (opts) => {
       const { id, } = opts.input
 
@@ -63,9 +62,6 @@ export const seriesRouter = createTRPCRouter({
           `https://api.themoviedb.org/3/tv/${id}/content_ratings`,
           { params: { api_key: process.env.TMDB_KEY, }, }
         )
-
-        // Log the response to help debug the structure
-        console.log('Response data results:', response.data.results)
 
         // Check if `results` is valid and is an array
         if (!response.data.results || !Array.isArray(response.data.results)) {
@@ -96,16 +92,13 @@ export const seriesRouter = createTRPCRouter({
     .query<ExternalIdsResponse | null>(async (opts) => {
       const { id, } = opts.input
       try {
-        // Make the API request to get external IDs
         const response = await axios.get<ExternalIdsResponse>(
           `${TMDB_API_URL}/tv/${id}/external_ids`,
           { params: { api_key: process.env.TMDB_KEY, }, }
         )
 
-        // Return the data (response from TMDB)
         return response.data
       } catch (error) {
-        // Error handling, throwing a more descriptive error message
         if (error instanceof Error) {
           throw new Error(`Error fetching series details from TMDB: ${error.message}`)
         } else {
@@ -117,8 +110,8 @@ export const seriesRouter = createTRPCRouter({
   getSeasonDetails: publicProcedure
     .input(
       z.object({
-        seriesId: z.string(), // Series ID as a string
-        seasonNumbers: z.array(z.number()), // Array of season numbers
+        seriesId: z.string(),
+        seasonNumbers: z.array(z.number()),
       })
     )
     .query<SeasonDetail[]>(async (opts) => {
@@ -127,9 +120,7 @@ export const seriesRouter = createTRPCRouter({
       try {
         const seasonDetails: SeasonDetail[] = []
 
-        // Fetch season details for each season number
         for (const seasonNumber of seasonNumbers) {
-          // Explicitly typing the response as `SeasonDetail`
           const response = await axios.get<SeasonDetail>(
             `${TMDB_API_URL}/tv/${seriesId}/season/${seasonNumber}`,
             {
@@ -140,12 +131,11 @@ export const seriesRouter = createTRPCRouter({
             }
           )
 
-          seasonDetails.push(response.data) // `response.data` is now typed as `SeasonDetail`
+          seasonDetails.push(response.data)
         }
 
         return seasonDetails
       } catch (error) {
-        // Error handling
         throw new Error('Error fetching series details from TMDB')
       }
     }),
@@ -179,7 +169,7 @@ export const seriesRouter = createTRPCRouter({
     }),
 
   getAggregateCredits: publicProcedure
-    .input(z.object({ id: z.string(), })) // TV series ID as a string
+    .input(z.object({ id: z.string(), }))
     .query<AggregateCreditsResponse>(async (opts) => {
       const { id, } = opts.input
 
@@ -201,8 +191,8 @@ export const seriesRouter = createTRPCRouter({
     }),
 
   getRecommended: publicProcedure
-    .input(z.object({ id: z.string(), }))  // Input is the TV series ID (string)
-    .query<RecommendedSeriesResponse>(async (opts) => {  // Output is the RecommendedSeriesResponse
+    .input(z.object({ id: z.string(), }))
+    .query<RecommendedSeriesResponse>(async (opts) => {
       const { id, } = opts.input
 
       try {
@@ -217,9 +207,8 @@ export const seriesRouter = createTRPCRouter({
           }
         )
 
-        return response.data  // Return the full response (including pagination and recommended movies)
+        return response.data
       } catch (error) {
-        // Error handling: type check to ensure proper error message
         if (error instanceof Error) {
           throw new Error(`Error fetching recommended movies from TMDB: ${error.message}`)
         } else {
@@ -229,8 +218,8 @@ export const seriesRouter = createTRPCRouter({
     }),
 
   getSimilar: publicProcedure
-    .input(z.object({ id: z.string(), }))  // Input is the TV series ID (string)
-    .query<SimilarSeriesResponse>(async (opts) => {  // Output is the SimilarSeriesResponse
+    .input(z.object({ id: z.string(), }))
+    .query<SimilarSeriesResponse>(async (opts) => {
       const { id, } = opts.input
 
       try {
@@ -245,54 +234,12 @@ export const seriesRouter = createTRPCRouter({
           }
         )
 
-        return response.data  // Return the full response (including pagination and similar shows)
+        return response.data
       } catch (error) {
-        // Error handling: type check to ensure proper error message
         if (error instanceof Error) {
           throw new Error(`Error fetching similar shows from TMDB: ${error.message}`)
         } else {
           throw new Error('Error fetching similar shows from TMDB')
-        }
-      }
-    }),
-
-  getVideos: publicProcedure
-    .input(z.object({ id: z.string(), })) // Input: TV Series ID as a string
-    .query<Video[] | []>(async (opts) => { // Output: An array of Video objects or empty array
-      const { id, } = opts.input
-
-      try {
-        const response = await axios.get<VideosResponse>(
-          `${TMDB_API_URL}/tv/${id}/videos`,
-          {
-            params: {
-              api_key: process.env.TMDB_KEY,
-              include_adult: false,
-              language: 'en-US',
-            },
-          }
-        )
-
-        // Filter all videos with a US release
-        const usReleases = response.data.results.filter(
-          (item) => item.iso_3166_1 === 'US'
-        )
-
-        // If no US releases found, return an empty array
-        if (usReleases.length === 0) {
-          return []
-        }
-
-        console.log('US Release Videos: ', usReleases)
-
-        // Return all found US releases
-        return usReleases
-
-      } catch (error) {
-        if (error instanceof Error) {
-          throw new Error(`Error fetching videos from TMDB: ${error.message}`)
-        } else {
-          throw new Error('Error fetching videos from TMDB')
         }
       }
     }),
@@ -309,7 +256,6 @@ export const seriesRouter = createTRPCRouter({
       const { seriesId, seasonNumber, episodeNumber, } = opts.input
 
       try {
-        // Call the TMDB API and type the response
         const response: AxiosResponse<EpisodeDetails> = await axios.get(
           `${TMDB_API_URL}/tv/${seriesId}/season/${seasonNumber}/episode/${episodeNumber}`,
           {

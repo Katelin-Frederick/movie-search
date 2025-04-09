@@ -1,19 +1,22 @@
+import type { ProductionCompany, ProductionCountry, SpokenLanguage, Genre, } from './types'
+import type { CastMember, CrewMember, } from './credits'
+
 export interface TMDBSeries {
-  original_language: string,
+  original_language: string
   origin_country: string[]
-  first_air_date: string,
-  original_name: string,
-  backdrop_path: string,
-  vote_average: number,
-  poster_path: string,
-  genre_ids: number[],
-  popularity: number,
-  vote_count: number,
-  media_type: 'tv',
-  overview: string,
-  adult: boolean,
-  name: string,
-  id: number,
+  first_air_date: string
+  original_name: string
+  backdrop_path: string
+  vote_average: number
+  poster_path: string
+  genre_ids: number[]
+  popularity: number
+  vote_count: number
+  media_type: 'tv'
+  overview: string
+  adult: boolean
+  name: string
+  id: number
 }
 
 export interface TrendingSeriesResponse {
@@ -23,107 +26,86 @@ export interface TrendingSeriesResponse {
   page: number
 }
 
+export interface Season {
+  episode_count: number
+  season_number: number
+  vote_average: number
+  poster_path: string
+  air_date: string
+  overview: string
+  name: string
+  id: number
+}
+
+export interface Episode {
+  production_code: string
+  episode_number: number
+  season_number: number
+  vote_average: number
+  episode_type: string
+  vote_count: number
+  still_path: string
+  overview: string
+  air_date: string
+  runtime: number
+  show_id: number
+  name: string
+  id: number
+}
+
 export interface TMDBSeriesDetails extends TMDBSeries {
-  last_episode_to_air: {
-    id: number,
-    name: string,
-    overview: string,
-    vote_average: number,
-    vote_count: number,
-    air_date: string,
-    episode_number: number,
-    episode_type: string,
-    production_code: string,
-    runtime: number,
-    season_number: number,
-    show_id: number,
-    still_path: string
-  },
-  seasons: [
-    {
-      air_date: string,
-      episode_count: number,
-      id: number,
-      name: string,
-      overview: string,
-      poster_path: string,
-      season_number: number,
-      vote_average: number
-    }
-  ],
   created_by: [
     {
-      id: number,
-      credit_id: string,
-      name: string,
-      original_name: string,
-      gender: number,
+      id: number
+      credit_id: string
+      name: string
+      original_name: string
+      gender: number
       profile_path: string
     }
-  ],
-  production_companies: [
-    {
-      id: number,
-      logo_path: null | string,
-      name: string,
-      origin_country: string
-    }
-  ],
+  ]
   networks: [
     {
-      id: number,
-      logo_path: string,
-      name: string,
+      id: number
+      logo_path: string
+      name: string
       origin_country: string
     }
-  ],
-  spoken_languages: [
-    {
-      english_name: string,
-      iso_639_1: string,
-      name: string
-    }
-  ],
-  production_countries: [
-    {
-      iso_3166_1: string,
-      name: string
-    }
-  ],
-  genres: [
-    {
-      id: number,
-      name: string
-    }
-  ],
+  ]
+  production_countries: ProductionCountry[]
+  production_companies: ProductionCompany[]
+  spoken_languages: SpokenLanguage[]
   origin_country: [
     string
-  ],
-  next_episode_to_air: null | string,
+  ]
+  next_episode_to_air: null | string
   languages: [
     string
-  ],
-  episode_run_time: [string],
-  number_of_episodes: number,
-  original_language: string,
-  number_of_seasons: number,
-  first_air_date: string,
-  in_production: boolean,
-  original_name: string,
-  last_air_date: string,
-  backdrop_path: string,
-  vote_average: number,
-  poster_path: string,
-  popularity: number,
+  ]
+  last_episode_to_air: Episode
+  episode_run_time: [string]
+  number_of_episodes: number
+  original_language: string
+  number_of_seasons: number
+  first_air_date: string
+  in_production: boolean
+  original_name: string
+  last_air_date: string
+  backdrop_path: string
+  vote_average: number
+  poster_path: string
+  popularity: number
   vote_count: number
-  overview: string,
-  homepage: string,
-  tagline: string,
-  status: string,
-  adult: boolean,
-  type: string,
-  name: string,
-  id: number,
+  seasons: Season[]
+  overview: string
+  homepage: string
+  genres: Genre[]
+  tagline: string
+  status: string
+  adult: boolean
+  type: string
+  name: string
+  id: number
 }
 
 export interface Certification {
@@ -136,90 +118,33 @@ export interface ContentRatingsResponse {
 }
 
 export interface SeasonDetail {
-  episodes: Array<{
-    air_date: string
-    episode_number: number
-    id: number
-    name: string
-    overview: string
-    still_path: string | null
-    vote_average: number
-    vote_count: number
-    season_number: number
-    runtime: number
-  }>
   poster_path: string | null
   air_date: string | null
   season_number: number
+  episodes: Episode[]
   overview: string
   name: string
   id: number
 }
 
 export interface EpisodeDetails {
-  guest_stars: [
-    {
-      character: string,
-      credit_id: string,
-      order: number,
-      adult: boolean,
-      gender: number,
-      id: number,
-      known_for_department: string,
-      name: string,
-      original_name: string,
-      popularity: number,
-      profile_path: string,
-    }
-  ],
-  crew: [
-    {
-      job: string,
-      department: string,
-      credit_id: string,
-      adult: boolean,
-      gender: number,
-      id: number,
-      known_for_department: string,
-      name: string,
-      original_name: string,
-      popularity: number,
-      profile_path: string
-    }
-  ],
-  production_code: string,
-  episode_number: number,
-  season_number: number,
-  vote_average: number,
-  still_path: string,
+  guest_stars: CastMember[]
+  production_code: string
+  episode_number: number
+  season_number: number
+  vote_average: number
+  crew: CrewMember[]
+  still_path: string
   vote_count: number
-  overview: string,
-  air_date: string,
-  runtime: number,
-  name: string,
-  id: number,
-}
-
-export interface CastMember {
-  character: string;
-  name: string;
-  id: number;
-}
-
-export interface CrewMember {
-  name: string;
-  job: string;
-  id: number;
-}
-
-export interface GuestStar {
-  character: string;
-  name: string;
-  id: number;
+  overview: string
+  air_date: string
+  runtime: number
+  name: string
+  id: number
 }
 
 export interface EpisodeCreditsResponse {
-  guest_stars: GuestStar[]
-  cast: CastMember[];
-  crew: CrewMember[];
+  guest_stars: CastMember[]
+  cast: CastMember[]
+  crew: CrewMember[]
 }

@@ -1,8 +1,9 @@
-import axios, { AxiosError, } from 'axios'
+import axios, { type AxiosResponse, AxiosError, } from 'axios'
 import { z, } from 'zod'
 
 import type { RecommendedMoviesResponse, } from '~/types/recommended'
 import type { CollectionResponse, } from '~/types/collections'
+import type { SimilarMoviesResponse, } from '~/types/similar'
 import type { ProvidersResponse, } from '~/types/providers'
 import type { CreditsResponse, } from '~/types/credits'
 
@@ -93,7 +94,6 @@ export const movieRouter = createTRPCRouter({
           // Handle general error
           throw new Error('Error fetching movie rating from TMDB: ' + error.message)
         } else {
-          // In case of an unknown error, handle accordingly
           throw new Error('An unexpected error occurred.')
         }
       }
@@ -179,8 +179,8 @@ export const movieRouter = createTRPCRouter({
     }),
 
   getRecommended: publicProcedure
-    .input(z.object({ id: z.string(), }))  // Input is the movie ID (string)
-    .query<RecommendedMoviesResponse>(async (opts) => {  // Output is the RecommendedMoviesResponse
+    .input(z.object({ id: z.string(), }))
+    .query<RecommendedMoviesResponse>(async (opts) => {
       const { id, } = opts.input
       try {
         const response = await axios.get<RecommendedMoviesResponse>(
@@ -194,13 +194,39 @@ export const movieRouter = createTRPCRouter({
           }
         )
 
-        return response.data  // Return the full response (including pagination and recommended movies)
+        return response.data
       } catch (error) {
-        // Error handling: type check to ensure proper error message
         if (error instanceof Error) {
           throw new Error(`Error fetching recommended movies from TMDB: ${error.message}`)
         } else {
           throw new Error('Error fetching recommended movies from TMDB')
+        }
+      }
+    }),
+
+  getSimilar: publicProcedure
+    .input(z.object({ id: z.string(), }))
+    .query(async (opts) => {
+      const { id, } = opts.input
+
+      try {
+        const response: AxiosResponse<SimilarMoviesResponse> = await axios.get(
+          `${TMDB_API_URL}/movie/${id}/similar`,
+          {
+            params: {
+              api_key: process.env.TMDB_KEY,
+              include_adult: false,
+              language: 'en-US',
+            },
+          }
+        )
+
+        return response.data
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new Error(`Error fetching similar shows from TMDB: ${error.message}`)
+        } else {
+          throw new Error('Error fetching similar shows from TMDB')
         }
       }
     }),

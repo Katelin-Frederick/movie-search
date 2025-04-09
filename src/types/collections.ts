@@ -4,7 +4,7 @@ export interface CollectionResponse {
   backdrop_path: string | null
   poster_path: string | null
   parts: TMDBMovie[]
-  overview: string,
+  overview: string
   name: string
-  id: number,
+  id: number
 }

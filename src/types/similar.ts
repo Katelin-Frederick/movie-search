@@ -1,15 +1,16 @@
-export interface SimilarSeries {
-  poster_path: string | null;
-  release_date: string;
-  vote_average: number;
-  overview: string;
-  name: string;
-  id: number;
-}
+import type { TMDBSeries, } from './series'
+import type { TMDBMovie, } from './movies'
 
 export interface SimilarSeriesResponse {
-  results: SimilarSeries[];
-  total_results: number;
-  total_pages: number;
-  page: number;
+  total_results: number
+  results: TMDBSeries[]
+  total_pages: number
+  page: number
+}
+
+export interface SimilarMoviesResponse {
+  total_results: number
+  results: TMDBMovie[]
+  total_pages: number
+  page: number
 }

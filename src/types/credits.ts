@@ -1,28 +1,41 @@
 export interface CastMember {
-  profile_path: string | null
+  known_for_department: string
+  original_name: string
+  profile_path: string
+  popularity: number
   character: string
-  cast_id: number
+  credit_id: string
+  adult: boolean
+  gender: number
   order: number
   name: string
   id: number
 }
 
+export interface MovieCastMember extends CastMember {
+  cast_id: number
+}
+
 export interface CrewMember {
-  profile_path: string | null
+  known_for_department: string
+  original_name: string
+  profile_path: string
   department: string
+  popularity: number
   credit_id: string
+  adult: boolean
+  gender: number
   name: string
   job: string
   id: number
 }
 
 export interface CreditsResponse {
-  cast: CastMember[]  // Array of cast members
-  crew: CrewMember[]  // Array of crew members
+  cast: MovieCastMember[]
+  crew: CrewMember[]
 }
 
 export interface AggregateCreditsResponse {
-  cast: { id: number; name: string; character: string }[];
-  crew: { id: number; name: string; job: string }[];
-  // Add other fields based on the TMDB response data.
+  cast: CastMember[]
+  crew: CrewMember[]
 }

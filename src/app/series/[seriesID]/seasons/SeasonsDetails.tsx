@@ -2,99 +2,42 @@
 
 import { AccordionTab, Accordion, } from 'primereact/accordion'
 import { TabPanel, TabView, } from 'primereact/tabview'
-import { addDays, format, } from 'date-fns'
 import Link from 'next/link'
 
+import { getSubtitle, formatDate, } from '~/lib/utils'
 import Poster from '~/components/Poster/Poster'
+import Button from '~/components/Button/Button'
 import { api, } from '~/trpc/react'
 
 const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
-  const { data: seriesDetails, isLoading, error: seriesDetailsError, } = api.series.getDetails.useQuery(
-    { id: seriesID, },
-    { enabled: !!seriesID, }
-  )
-
-  const { data: externalIds, isLoading: isExternalIdsLoading, error: externalIdsError, } = api.series.getExternalIds.useQuery(
-    { id: seriesID, },
-    { enabled: !!seriesID, }
-  )
-
-  const { data: providers, isLoading: isProvidersLoading, error: providersError, } = api.series.getProviders.useQuery(
-    { id: seriesID, },
-    { enabled: !!seriesID, }
-  )
-
-  const { data: rating, isLoading: isRatingLoading, error: ratingError, } = api.series.getRating.useQuery(
+  const {
+    data: seriesDetails,
+    isLoading,
+    error: seriesDetailsError,
+  } = api.series.getDetails.useQuery(
     { id: seriesID, },
     { enabled: !!seriesID, }
   )
 
   const {
-    data: aggregateCredits,
-    isLoading: isAggregateCreditsLoading,
-    error: aggregateCreditsError,
-  } = api.series.getAggregateCredits.useQuery(
-    { id: seriesID, },
-    { enabled: !!seriesID, }
-  )
-
-  const {
-    data: recommendations,
-    isLoading: isRecommendationsLoading,
-    error: recommendationsError,
-  } = api.series.getRecommended.useQuery(
-    { id: seriesID, },
-    { enabled: !!seriesID, }
-  )
-
-  const {
-    data: similar,
-    isLoading: isSimilarLoading,
-    error: similarError,
-  } = api.series.getSimilar.useQuery(
-    { id: seriesID, },
-    { enabled: !!seriesID, }
-  )
-
-  const {
-    data: videos,
-    isLoading: isVideosLoading,
-    error: videosError,
-  } = api.series.getVideos.useQuery(
+    data: rating,
+    isLoading: isRatingLoading,
+    error: ratingError,
+  } = api.series.getRating.useQuery(
     { id: seriesID, },
     { enabled: !!seriesID, }
   )
 
   const seasonNumberList = seriesDetails?.seasons.map((season) => season.season_number)
 
-  const { data: seasonDetails, isLoading: isSeasonDetailsLoading, error: seasonDetailsError, } = api.series.getSeasonDetails.useQuery(
+  const {
+    data: seasonDetails,
+    isLoading: isSeasonDetailsLoading,
+    error: seasonDetailsError,
+  } = api.series.getSeasonDetails.useQuery(
     { seriesId: seriesID, seasonNumbers: seasonNumberList ?? [], },
     { enabled: !!seriesID, }
   )
-
-  console.log('videos', videos)
-
-  const getSubtitle = () => {
-    let subtitle = 'TV Series'
-
-    if (rating) {
-      subtitle = `${subtitle} | ${rating}`
-    }
-
-    return subtitle
-  }
-
-  const formatDate = (date: string) => {
-    if (date === '') {
-      return 'N/A'
-    }
-
-    const newDate = new Date(addDays(new Date(date ?? ''), 1))
-
-    const formattedDate = format(newDate, 'MMMM dd, yyyy')
-
-    return formattedDate
-  }
 
   const formatRuntime = (runtime: number) => {
     const hours = Math.floor((runtime ?? 0) / 60)
@@ -107,12 +50,6 @@ const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
     return `${remainingMinutes}m`
   }
 
-  const getCreatedBy = () => seriesDetails?.created_by.map((item) => item.name).join(', ')
-  const getLanguages = () => seriesDetails?.spoken_languages.map((language) => language.name).join(', ')
-  const getNetworks = () => seriesDetails?.networks.map((network) => network.name).join(', ')
-  const getProductionCompanies = () => seriesDetails?.production_companies.map((company) => company.name).join(', ')
-  const getProductionCountries = () => seriesDetails?.production_countries.map((country) => country.name).join(', ')
-
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -124,7 +61,7 @@ const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
   return (
     <div>
       <h1 className='text-3xl md:text-4xl lg:text-5xl mb-3 text-center md:text-left font-bold'>{seriesDetails?.name}</h1>
-      <p className='mb-3 text-center md:text-left'>{getSubtitle()}</p>
+      <p className='mb-3 text-center md:text-left'>{getSubtitle('series', rating ?? 'N/A')}</p>
 
       <h2 className='text-3xl mb-8 text-center md:text-left font-bold'>Seasons</h2>
 
@@ -194,6 +131,20 @@ const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
           </TabPanel>
         ))}
       </TabView>
+
+      <div>
+        <Link
+          href='/'
+        >
+          <Button variant='secondary' className='mt-8 mr-4'>Back to Search</Button>
+        </Link>
+
+        <Link
+          href={`/series/${seriesID}`}
+        >
+          <Button className='mt-8'>Back to Series Details</Button>
+        </Link>
+      </div>
     </div>
   )
 }

@@ -1,42 +1,74 @@
 'use client'
 
-import { format, } from 'date-fns'
 import Link from 'next/link'
 
+import { getSubtitle, formatMoney, getDirector, formatDate, cn, } from '~/lib/utils'
 import Carousel from '~/components/Carousel/Carousel'
 import Button from '~/components/Button/Button'
 import Poster from '~/components/Poster/Poster'
 import { api, } from '~/trpc/react'
 import { rockSalt, } from '~/fonts'
-import { cn, } from '~/lib/utils'
 
 const MovieDetails = ({ movieID, }: { movieID: string }) => {
-  const { data: movieDetails, isLoading: isMovieDetailsLoading, error: movieDetailsError, } = api.movies.getDetails.useQuery(
+  const {
+    data: movieDetails,
+    isLoading: isMovieDetailsLoading,
+    error: movieDetailsError,
+  } = api.movies.getDetails.useQuery(
     { id: movieID, },
     { enabled: !!movieID, }
   )
 
-  const { data: rating, isLoading: isRatingLoading, error: ratingError, } = api.movies.getRating.useQuery(
+  const {
+    data: rating,
+    isLoading: isRatingLoading,
+    error: ratingError,
+  } = api.movies.getRating.useQuery(
     { id: movieID, },
     { enabled: !!movieID, }
   )
 
-  const { data: credits, isLoading: isCreditsLoading, error: creditsError, } = api.movies.getCredits.useQuery(
+  const {
+    data: credits,
+    isLoading: isCreditsLoading,
+    error: creditsError,
+  } = api.movies.getCredits.useQuery(
     { id: movieID, },
     { enabled: !!movieID, }
   )
 
-  const { data: providers, isLoading: isProvidersLoading, error: providersError, } = api.movies.getProviders.useQuery(
+  const {
+    data: providers,
+    isLoading: isProvidersLoading,
+    error: providersError,
+  } = api.movies.getProviders.useQuery(
     { id: movieID, },
     { enabled: !!movieID, }
   )
 
-  const { data: collection, isLoading: isCollectionLoading, error: collectionError, } = api.movies.getCollection.useQuery(
+  const {
+    data: collection,
+    isLoading: isCollectionLoading,
+    error: collectionError,
+  } = api.movies.getCollection.useQuery(
     { collectionId: movieDetails?.belongs_to_collection?.id ?? null, },
     { enabled: !!movieID, }
   )
 
-  const { data: recommended, isLoading: isRecommendedLoading, error: RecommendedError, } = api.movies.getRecommended.useQuery(
+  const {
+    data: similar,
+    isLoading: isSimilarLoading,
+    error: SimilarError,
+  } = api.movies.getSimilar.useQuery(
+    { id: movieID, },
+    { enabled: !!movieID, }
+  )
+
+  const {
+    data: recommended,
+    isLoading: isRecommendedLoading,
+    error: RecommendedError,
+  } = api.movies.getRecommended.useQuery(
     { id: movieID, },
     { enabled: !!movieID, }
   )
@@ -55,49 +87,6 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
     return <div>Error loading movie details: {movieDetailsError.message}</div>
   }
 
-  const getSubtitle = () => {
-    let subtitle = 'Movie'
-
-    if (rating) {
-      subtitle = `${subtitle} | ${rating}`
-    }
-
-    if (movieDetails?.runtime ?? 0 > 0) {
-      subtitle = `${subtitle} | ${formatRuntime(movieDetails?.runtime ?? 0)}`
-    }
-
-    return subtitle
-  }
-
-  const formatReleasedDate = () => {
-    if (movieDetails?.release_date === '') {
-      return 'N/A'
-    }
-
-    const releaseDate = new Date(movieDetails?.release_date ?? '')
-
-    const formattedReleaseDate = format(releaseDate, 'MMMM dd, yyyy')
-
-    return formattedReleaseDate
-  }
-
-  const formatRuntime = (runtime: number) => {
-    const hours = Math.floor((runtime ?? 0) / 60)
-    const remainingMinutes = (runtime ?? 0) % 60
-
-    if (hours !== 0) {
-      return `${hours}h ${remainingMinutes}m`
-    }
-
-    return `${remainingMinutes}m`
-  }
-
-  const formatMoney = (amount: number) => new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount)
-
-  const getDirector = () => credits?.crew.filter((person) => person.job === 'Director').map((person) => person.name).join(', ')
   const getWriter = () => credits?.crew.filter((person) => person.job === 'Writer' || person.job === 'Story' || person.job === 'Screenplay').map((person) => person.name).join(', ')
   const getProducers = () => credits?.crew.filter((person) => person.job === 'Executive Producer' || person.job === 'Producer').map((person) => person.name).join(', ')
   const getLanguages = () => movieDetails?.spoken_languages.map((language) => language.name).join(', ')
@@ -107,7 +96,7 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
   return (
     <div>
       <h1 className='text-3xl md:text-4xl lg:text-5xl mb-3 text-center md:text-left font-bold'>{movieDetails?.title}</h1>
-      <p className='mb-3 text-center md:text-left'>{getSubtitle()}</p>
+      <p className='mb-3 text-center md:text-left'>{getSubtitle('movie', rating ?? 'N/A')}</p>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12'>
         <div className='flex justify-start items-center md:items-start flex-col'>
@@ -128,13 +117,13 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
             <li
               className='bg-gray-800 border-2 border-gray-100 p-4 rounded-t-md'
             >
-              <span className='font-bold'>Released:</span> {formatReleasedDate()}
+              <span className='font-bold'>Released:</span> {formatDate(movieDetails?.release_date ?? '')}
             </li>
 
             <li
               className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
             >
-              <span className='font-bold'>Director:</span> {getDirector() === '' ? 'N/A' : getDirector()}
+              <span className='font-bold'>Director:</span> {getDirector(credits?.crew ?? [])}
             </li>
 
             <li
@@ -249,6 +238,18 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
           <p className='mb-4'>{collection?.overview}</p>
 
           <Carousel data={collection?.parts ?? []} />
+        </div>
+      )}
+
+      {similar?.results && similar.results.length > 0 && (
+        <div className='mt-12'>
+          <h2
+            className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
+          >
+            Similar
+          </h2>
+
+          <Carousel data={similar?.results ?? []} />
         </div>
       )}
 
