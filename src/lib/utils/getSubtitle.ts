@@ -1,4 +1,4 @@
-type MediaType = 'movie' | 'series' | 'person'
+type MediaType = 'movie' | 'series'
 
 const getSubtitle = (mediaType: MediaType, rating: string): string => {
   let subtitle = `${mediaType}`
@@ -10,10 +10,6 @@ const getSubtitle = (mediaType: MediaType, rating: string): string => {
     }
     case 'series': {
       subtitle = 'TV Series'
-      break
-    }
-    case 'person': {
-      subtitle = 'Person'
       break
     }
     default: {

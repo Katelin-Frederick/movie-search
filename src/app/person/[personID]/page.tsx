@@ -5,13 +5,11 @@ const PersonDeatilsPage = async ({ params, }: {
 }) => {
   const { personID, } = await params
 
-  console.log('personID', personID)
-
   return (
-    <div>
-      <p>details</p>
-
-      <PersonDeatils personID={personID} />
+    <div className='flex flex-col justify-center items-center'>
+      <div className='container py-14'>
+        <PersonDeatils personID={personID} />
+      </div>
     </div>
   )
 }

@@ -12,6 +12,46 @@ export interface CastMember {
   id: number
 }
 
+export interface MovieCredit {
+  original_language: string
+  original_title: string
+  backdrop_path: string
+  release_date: string
+  vote_average: number
+  poster_path: string
+  genre_ids: number[]
+  popularity: number
+  vote_count: number
+  character: string
+  credit_id: string
+  overview: string
+  adult: boolean
+  video: boolean
+  order: number
+  title: string
+  id: number
+}
+
+export interface SeriesCredit {
+  original_language: string
+  original_title: string
+  backdrop_path: string
+  release_date: string
+  vote_average: number
+  poster_path: string
+  genre_ids: number[]
+  popularity: number
+  vote_count: number
+  character: string
+  credit_id: string
+  overview: string
+  adult: boolean
+  video: boolean
+  order: number
+  name: string
+  id: number
+}
+
 export interface MovieCastMember extends CastMember {
   cast_id: number
 }
