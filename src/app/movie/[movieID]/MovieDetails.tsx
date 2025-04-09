@@ -2,7 +2,19 @@
 
 import Link from 'next/link'
 
-import { getSubtitle, formatMoney, getDirector, formatDate, cn, } from '~/lib/utils'
+import {
+  getProductionCompanies,
+  getProductionCountries,
+  formatRuntime,
+  getLanguages,
+  getSubtitle,
+  formatMoney,
+  getDirector,
+  getProducer,
+  formatDate,
+  getWriter,
+  cn,
+} from '~/lib/utils'
 import Carousel from '~/components/Carousel/Carousel'
 import Button from '~/components/Button/Button'
 import Poster from '~/components/Poster/Poster'
@@ -87,12 +99,6 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
     return <div>Error loading movie details: {movieDetailsError.message}</div>
   }
 
-  const getWriter = () => credits?.crew.filter((person) => person.job === 'Writer' || person.job === 'Story' || person.job === 'Screenplay').map((person) => person.name).join(', ')
-  const getProducers = () => credits?.crew.filter((person) => person.job === 'Executive Producer' || person.job === 'Producer').map((person) => person.name).join(', ')
-  const getLanguages = () => movieDetails?.spoken_languages.map((language) => language.name).join(', ')
-  const getProductionCompanies = () => movieDetails?.production_companies.map((company) => company.name).join(', ')
-  const getProductionCountries = () => movieDetails?.production_countries.map((country) => country.name).join(', ')
-
   return (
     <div>
       <h1 className='text-3xl md:text-4xl lg:text-5xl mb-3 text-center md:text-left font-bold'>{movieDetails?.title}</h1>
@@ -123,19 +129,25 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
             <li
               className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
             >
+              <span className='font-bold'>Runtime:</span> {formatRuntime(movieDetails?.runtime ?? 0)}
+            </li>
+
+            <li
+              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
+            >
               <span className='font-bold'>Director:</span> {getDirector(credits?.crew ?? [])}
             </li>
 
             <li
               className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
             >
-              <span className='font-bold'>Writen By:</span> {getWriter() === '' ? 'N/A' : getWriter()}
+              <span className='font-bold'>Writen By:</span> {getWriter(credits?.crew ?? [])}
             </li>
 
             <li
               className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
             >
-              <span className='font-bold'>Languages:</span> {getLanguages()}
+              <span className='font-bold'>Languages:</span> {getLanguages(movieDetails?.spoken_languages ?? [])}
             </li>
 
             <li
@@ -214,9 +226,15 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
       </div>
 
       <h2 className='text-3xl'>Production Information:</h2>
-      <p className='my-3'><span className='font-bold'>Producers:</span> {getProducers()}</p>
-      <p className='my-3'><span className='font-bold'>Production Companies:</span> {getProductionCompanies()}</p>
-      <p className='my-3'><span className='font-bold'>Production Countries:</span> {getProductionCountries()}</p>
+      <p className='my-3'>
+        <span className='font-bold'>Producers:</span> {getProducer(credits?.crew ?? [])}
+      </p>
+      <p className='my-3'>
+        <span className='font-bold'>Production Companies:</span> {getProductionCompanies(movieDetails?.production_companies ?? [])}
+      </p>
+      <p className='my-3'>
+        <span className='font-bold'>Production Countries:</span> {getProductionCountries(movieDetails?.production_countries ?? [])}
+      </p>
 
       <div className='mt-12'>
         <h2

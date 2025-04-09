@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import { getSubtitle, formatDate, cn, } from '~/lib/utils'
+import { getProductionCompanies, getProductionCountries, getLanguages, getSubtitle, formatDate, cn, } from '~/lib/utils'
 import Carousel from '~/components/Carousel/Carousel'
 import Poster from '~/components/Poster/Poster'
 import Button from '~/components/Button/Button'
@@ -74,10 +74,7 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
   )
 
   const getCreatedBy = () => seriesDetails?.created_by.map((item) => item.name).join(', ')
-  const getLanguages = () => seriesDetails?.spoken_languages.map((language) => language.name).join(', ')
   const getNetworks = () => seriesDetails?.networks.map((network) => network.name).join(', ')
-  const getProductionCompanies = () => seriesDetails?.production_companies.map((company) => company.name).join(', ')
-  const getProductionCountries = () => seriesDetails?.production_countries.map((country) => country.name).join(', ')
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -137,7 +134,7 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
             <li
               className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
             >
-              <span className='font-bold'>Languages:</span> {getLanguages()}
+              <span className='font-bold'>Languages:</span> {getLanguages(seriesDetails?.spoken_languages ?? [])}
             </li>
 
             <li
@@ -228,8 +225,12 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
       </div>
 
       <h2 className='text-3xl'>Production Information:</h2>
-      <p className='my-3'><span className='font-bold'>Production Companies:</span> {getProductionCompanies()}</p>
-      <p className='my-3'><span className='font-bold'>Production Countries:</span> {getProductionCountries()}</p>
+      <p className='my-3'>
+        <span className='font-bold'>Production Companies:</span> {getProductionCompanies(seriesDetails?.production_companies ?? [])}
+      </p>
+      <p className='my-3'>
+        <span className='font-bold'>Production Countries:</span> {getProductionCountries(seriesDetails?.production_countries ?? [])}
+      </p>
 
       <div className='mt-12'>
         <h2

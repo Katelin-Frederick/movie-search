@@ -4,7 +4,7 @@ import { AccordionTab, Accordion, } from 'primereact/accordion'
 import { TabPanel, TabView, } from 'primereact/tabview'
 import Link from 'next/link'
 
-import { getSubtitle, formatDate, } from '~/lib/utils'
+import { formatRuntime, getSubtitle, formatDate, } from '~/lib/utils'
 import Poster from '~/components/Poster/Poster'
 import Button from '~/components/Button/Button'
 import { api, } from '~/trpc/react'
@@ -38,17 +38,6 @@ const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
     { seriesId: seriesID, seasonNumbers: seasonNumberList ?? [], },
     { enabled: !!seriesID, }
   )
-
-  const formatRuntime = (runtime: number) => {
-    const hours = Math.floor((runtime ?? 0) / 60)
-    const remainingMinutes = (runtime ?? 0) % 60
-
-    if (hours !== 0) {
-      return `${hours}h ${remainingMinutes}m`
-    }
-
-    return `${remainingMinutes}m`
-  }
 
   if (isLoading) {
     return <div>Loading...</div>

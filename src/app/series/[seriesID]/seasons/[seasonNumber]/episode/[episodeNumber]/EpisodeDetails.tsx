@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import { getSubtitle, getDirector, formatDate, cn, } from '~/lib/utils'
+import { formatRuntime, getSubtitle, getDirector, formatDate, getWriter, cn, } from '~/lib/utils'
 import Carousel from '~/components/Carousel/Carousel'
 import Poster from '~/components/Poster/Poster'
 import Button from '~/components/Button/Button'
@@ -50,19 +50,6 @@ const EpisodeDetails = ({
     { enabled: !!seriesID, }
   )
 
-  const formatRuntime = (runtime: number) => {
-    const hours = Math.floor((runtime ?? 0) / 60)
-    const remainingMinutes = (runtime ?? 0) % 60
-
-    if (hours !== 0) {
-      return `${hours}h ${remainingMinutes}m`
-    }
-
-    return `${remainingMinutes}m`
-  }
-
-  const getWriter = () => episodeDetails?.crew.filter((person) => person.job === 'Writer' || person.job === 'Story' || person.job === 'Screenplay').map((person) => person.name).join(', ')
-
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -96,7 +83,7 @@ const EpisodeDetails = ({
           <p><span className='font-bold'>Air Date:</span> {formatDate(episodeDetails?.air_date ?? '')}</p>
           <p className='m-0'><span className='font-bold'>Runtime:</span> {formatRuntime(episodeDetails?.runtime ?? 0)}</p>
           <p className='m-0'><span className='font-bold'>Directed By:</span> {getDirector(episodeCredits?.crew ?? [])}</p>
-          <p className='m-0'><span className='font-bold'>Written By:</span> {getWriter()}</p>
+          <p className='m-0'><span className='font-bold'>Written By:</span> {getWriter(episodeDetails?.crew ?? [])}</p>
 
           <h3 className='text-3xl text-white mt-6'>Overview:</h3>
           <p>{episodeDetails?.overview ?? 'No Episode Overview Available'}</p>
