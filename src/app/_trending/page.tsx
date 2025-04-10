@@ -1,14 +1,13 @@
 'use client'
 
 import { api, } from '~/trpc/react'
-import { rockSalt, } from '~/fonts'
-import { cn, } from '~/lib/utils'
 
 import TrendingMovies from './movies'
 import TrendingPeople from './people'
 import TrendingSeries from './series'
 
 const Trending = () => {
+
   const {
     data: trendingMovies,
     isLoading: isLoadingTrendingMovies,
@@ -32,12 +31,6 @@ const Trending = () => {
 
   return (
     <>
-      <h1
-        className={cn('text-3xl md:text-[40px] text-yellow-500 mb-18 text-center', rockSalt.className)}
-      >
-        Screen Scout
-      </h1>
-
       <div className='mb-16'>
         <TrendingMovies trendingMovies={trendingMovies!} />
       </div>

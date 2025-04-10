@@ -1,29 +1,28 @@
-# Create T3 App
+# ReelSearch 🎬  
+Effortlessly search movies, shows, and the people behind them.
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+ReelSearch is a full-stack web app built with Next.js (App Router), tRPC, and The Movie Database (TMDB) API. It allows users to search across movies, TV shows, and personalities, with optional filters like release year. Designed to be clean, responsive, and developer-friendly.
 
-## What's next? How do I make an app with this?
+## 🔧 Features
+- Full TMDB-powered search (movies, TV, people, multi)
+- Optional year filtering (validated and type-safe)
+- Formik + Yup for input handling
+- tRPC + Zod for end-to-end type safety
+- Tailwind CSS UI with custom components
+- Fully typed procedures, clean architecture
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## 🧱 Tech Stack
+- **Frontend**: React, Next.js 15 (App Router), Formik, Tailwind CSS
+- **Backend**: tRPC, Zod, TMDB API
+- **Language**: TypeScript
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## 🚀 Getting Started
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+1. Clone the repo  
+   `git clone https://github.com/your-username/reelsearch.git`
 
-## Learn More
+2. Install dependencies  
+   `npm install`
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+3. Add your TMDB API key  
+   Create a `.env` file and add:
