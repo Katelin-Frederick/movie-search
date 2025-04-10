@@ -159,7 +159,7 @@ const Search = () => {
 
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-12'>
         {searchMutation?.data?.results.map((result) => (
-          <div key={result.id} className='rounded-lg shadow-lg overflow-hidden max-w-xs w-full'>
+          <div key={result.id} className='rounded-lg overflow-hidden max-w-xs w-full bg-gray-800'>
             <Image
               src={`https://image.tmdb.org/t/p/w500${result.poster_path}`}
               alt={result.title ?? result.name}
@@ -171,10 +171,14 @@ const Search = () => {
             />
             <div className='p-4'>
               <h3 className='text-xl font-semibold'>{result.title ?? result.name}</h3>
-              <p className='text-sm text-gray-600'>{result.release_date ?? result.first_air_date}</p>
-              {result.overview && (
-                <p className='text-gray-800'>{result.overview.slice(0, 100)}...</p>
-              )}
+              <p className='text-sm text-yellow-500'>{result.release_date ?? result.first_air_date}</p>
+
+              <h4 className='text-lg font-semibold'>Overview</h4>
+              <p>{result.overview ? `${result.overview.slice(0, 100)}...` : 'N/A'}</p>
+
+              <div className='flex justify-center items-center mt-8'>
+                <Button>View Details</Button>
+              </div>
             </div>
           </div>
         ))}
