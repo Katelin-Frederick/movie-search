@@ -30,7 +30,7 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
 
   const {
     data: seriesDetails,
-    isLoading,
+    isLoading: isSeriesDetailsLoading,
     error: seriesDetailsError,
   } = api.series.getDetails.useQuery(
     { id: seriesID, },
@@ -74,15 +74,6 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
   )
 
   const {
-    data: recommended,
-    isLoading: isRecommendedLoading,
-    error: recommendedError,
-  } = api.series.getRecommended.useQuery(
-    { id: seriesID, },
-    { enabled: !!seriesID, }
-  )
-
-  const {
     data: similar,
     isLoading: isSimilarLoading,
     error: similarError,
@@ -91,14 +82,23 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
     { enabled: !!seriesID, }
   )
 
+  const {
+    data: recommended,
+    isLoading: isRecommendedLoading,
+    error: recommendedError,
+  } = api.series.getRecommended.useQuery(
+    { id: seriesID, },
+    { enabled: !!seriesID, }
+  )
+
   const isAnyLoading
-    = isLoading
+    = isSeriesDetailsLoading
     || isExternalIdsLoading
     || isProvidersLoading
     || isRatingLoading
     || isAggregateCreditsLoading
-    || isRecommendedLoading
     || isSimilarLoading
+    || isRecommendedLoading
 
   if (isAnyLoading) {
     return <Spinner />
@@ -106,6 +106,30 @@ const SeriesDetails = ({ seriesID, }: { seriesID: string }) => {
 
   if (seriesDetailsError) {
     return <div>Error loading series details: {seriesDetailsError.message}</div>
+  }
+
+  if (externalIdsError) {
+    return <div>Error loading externalIds: {externalIdsError.message}</div>
+  }
+
+  if (providersError) {
+    return <div>Error loading series providers: {providersError.message}</div>
+  }
+
+  if (ratingError) {
+    return <div>Error loading series rating: {ratingError.message}</div>
+  }
+
+  if (aggregateCreditsError) {
+    return <div>Error loading series credits: {aggregateCreditsError.message}</div>
+  }
+
+  if (similarError) {
+    return <div>Error loading similar series: {similarError.message}</div>
+  }
+
+  if (recommendedError) {
+    return <div>Error loading recommended series: {recommendedError.message}</div>
   }
 
   const getCreatedBy = () => seriesDetails?.created_by.map((item) => item.name).join(', ')

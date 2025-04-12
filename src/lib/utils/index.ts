@@ -1,5 +1,6 @@
 import getProductionCompanies from './getProductionCompanies'
 import getProductionCountries from './getProductionCountries'
+import getPaginatedRange from './getPaginatedRange'
 import formatRuntime from './formatRuntime'
 import getLanguages from './getLanguages'
 import getProducer from './getProducer'
@@ -17,6 +18,7 @@ export {
   formatRuntime,
   getDirector,
   getLanguages,
+  getPaginatedRange,
   getProducer,
   getProductionCompanies,
   getProductionCountries,

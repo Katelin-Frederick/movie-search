@@ -42,21 +42,25 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
   const {
     data: rating,
     isLoading: isRatingLoading,
+    error: ratingError,
   } = api.movies.getRating.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
   const {
     data: credits,
     isLoading: isCreditsLoading,
+    error: creditsError,
   } = api.movies.getCredits.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
   const {
     data: providers,
     isLoading: isProvidersLoading,
+    error: providersError,
   } = api.movies.getProviders.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
   const {
     data: collection,
     isLoading: isCollectionLoading,
+    error: collectionError,
   } = api.movies.getCollection.useQuery(
     { collectionId: movieDetails?.belongs_to_collection?.id ?? null, },
     { enabled: !!movieID, }
@@ -65,11 +69,13 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
   const {
     data: similar,
     isLoading: isSimilarLoading,
+    error: similarError,
   } = api.movies.getSimilar.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
   const {
     data: recommended,
     isLoading: isRecommendedLoading,
+    error: recommendedError,
   } = api.movies.getRecommended.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
   const isAnyLoading
@@ -79,6 +85,7 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
     || isProvidersLoading
     || isCollectionLoading
     || isRecommendedLoading
+    || isSimilarLoading
 
   if (isAnyLoading) {
     return <Spinner />
@@ -86,6 +93,30 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
 
   if (movieDetailsError) {
     return <div>Error loading movie details: {movieDetailsError.message}</div>
+  }
+
+  if (ratingError) {
+    return <div>Error loading movie rating: {ratingError.message}</div>
+  }
+
+  if (creditsError) {
+    return <div>Error loading movie credits: {creditsError.message}</div>
+  }
+
+  if (providersError) {
+    return <div>Error loading providers: {providersError.message}</div>
+  }
+
+  if (collectionError) {
+    return <div>Error loading movie collections: {collectionError.message}</div>
+  }
+
+  if (similarError) {
+    return <div>Error loading similar movies: {similarError.message}</div>
+  }
+
+  if (recommendedError) {
+    return <div>Error loading recommended movies: {recommendedError.message}</div>
   }
 
   return (
@@ -98,7 +129,6 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
       </p>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12'>
-        {/* Poster */}
         <div className='flex justify-start items-center md:items-start flex-col'>
           <div className='relative w-full max-w-[350px] aspect-[2/3] bg-gradient-to-br from-yellow-700 via-yellow-500 to-yellow-800 rounded-sm overflow-hidden'>
             {hasImageError || !movieDetails?.poster_path ? (
@@ -122,7 +152,6 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
           </div>
         </div>
 
-        {/* Info List */}
         <div className='flex justify-center items-start my-12 md:my-0'>
           <ul>
             <li className='bg-gray-800 border-2 border-gray-100 p-4 rounded-t-md'>
@@ -160,7 +189,6 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
           </ul>
         </div>
 
-        {/* Genres and Plot */}
         <div className='md:col-span-2 lg:col-span-1'>
           <div className='flex flex-wrap max-w-[350px] justify-center items-center mb-4 w-full'>
             {movieDetails?.genres.map((genre) => (
@@ -210,7 +238,6 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
         </div>
       </div>
 
-      {/* Production Info */}
       <h2 className='text-3xl'>Production Information:</h2>
       <p className='my-3'>
         <span className='font-bold'>Producers:</span>{' '}
@@ -225,7 +252,6 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
         {getProductionCountries(movieDetails?.production_countries ?? [])}
       </p>
 
-      {/* Carousels */}
       <div className='mt-12'>
         <h2 className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}>Cast</h2>
         <Carousel type='cast' data={credits?.cast ?? []} />

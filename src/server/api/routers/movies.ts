@@ -73,25 +73,21 @@ export const movieRouter = createTRPCRouter({
           return 'N/A'
         }
 
-        // Find the US release date
         const usRelease = response.data.results.find((item) => item.iso_3166_1 === 'US')
         if (!usRelease) {
           return 'N/A'
         }
 
-        // Find the valid certification for the US release
         const usRating = usRelease.release_dates.find((item) => item.note === '')
         if (!usRating) {
           return 'N/A'
         }
 
-        return usRating.certification  // Return the certification (string)
+        return usRating.certification
       } catch (error) {
         if (error instanceof AxiosError) {
-          // Handle Axios-specific error
           throw new Error(`Error fetching movie rating from TMDB: ${error.message}`)
         } else if (error instanceof Error) {
-          // Handle general error
           throw new Error('Error fetching movie rating from TMDB: ' + error.message)
         } else {
           throw new Error('An unexpected error occurred.')
@@ -136,7 +132,6 @@ export const movieRouter = createTRPCRouter({
           }
         )
 
-        // Extract the provider link for the "US" region, or return null if it's not available
         const providerLink = response.data.results.US?.link ?? null
 
         return providerLink
@@ -155,7 +150,7 @@ export const movieRouter = createTRPCRouter({
       const { collectionId, } = opts.input
       try {
         if (collectionId === null) {
-          return null // Return null if collectionId is null
+          return null
         }
 
         const response = await axios.get<CollectionResponse>(

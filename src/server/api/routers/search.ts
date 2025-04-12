@@ -14,10 +14,13 @@ export const searchRouter = createTRPCRouter({
         searchType: z.union([z.literal('movie'), z.literal('tv'), z.literal('person'), z.literal('multi')]),
         searchValue: z.string(),
         year: z.number().optional(),
+        page: z.number().optional().default(1),
       })
     )
     .mutation(async (opts) => {
-      const { searchType, searchValue, year, } = opts.input
+      const {
+        searchType, searchValue, year, page,
+      } = opts.input
 
       try {
         const params: Record<string, unknown> = {
@@ -25,6 +28,7 @@ export const searchRouter = createTRPCRouter({
           language: 'en-US',
           include_adult: false,
           query: searchValue,
+          page,
         }
 
         if (year) {

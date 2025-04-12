@@ -47,7 +47,7 @@ const Series = ({ series, }: { series: TMDBSeries }) => {
         </div>
 
         <div className='mt-auto p-4 flex justify-center'>
-          <Button onClick={() => router.push(`/series/${series.id}`)}>View Details</Button>
+          <Button size='sm' onClick={() => router.push(`/series/${series.id}`)}>View Details</Button>
         </div>
       </div>
     </div>

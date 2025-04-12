@@ -63,21 +63,16 @@ export const seriesRouter = createTRPCRouter({
           { params: { api_key: process.env.TMDB_KEY, }, }
         )
 
-        // Check if `results` is valid and is an array
         if (!response.data.results || !Array.isArray(response.data.results)) {
           return 'N/A'
         }
 
-        // Find the US release information
         const usRelease = response.data.results.find((item) => item.iso_3166_1 === 'US')
         if (!usRelease) {
           return 'N/A'
         }
 
-        console.log('usRelease: ', usRelease)
-
-        // Return the certification (string)
-        return usRelease.rating || 'N/A' // Ensure it defaults to 'N/A' if `rating` is undefined
+        return usRelease.rating || 'N/A'
       } catch (error) {
         if (error instanceof Error) {
           throw new Error(`Error fetching TV series certifications from TMDB: ${error.message}`)
@@ -155,7 +150,6 @@ export const seriesRouter = createTRPCRouter({
           }
         )
 
-        // Extract the provider link for the "US" region, or return null if it's not available
         const providerLink = response.data.results.US?.link ?? null
 
         return providerLink

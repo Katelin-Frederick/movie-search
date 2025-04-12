@@ -29,12 +29,20 @@ const PersonDetails = ({ personID, }: { personID: string }) => {
     error: personDetailsError,
   } = api.people.getDetails.useQuery({ id: personID, }, { enabled: !!personID, })
 
-  const { data: movieCredits, } = api.people.getMovieCredits.useQuery(
+  const {
+    data: movieCredits,
+    isLoading: isMovieCreditsLoading,
+    error: movieCreditsError,
+  } = api.people.getMovieCredits.useQuery(
     { id: personID, },
     { enabled: !!personID, }
   )
 
-  const { data: tvCredits, } = api.people.getTVCredits.useQuery({ id: personID, }, { enabled: !!personID, })
+  const {
+    data: tvCredits,
+    isLoading: isTvCreditsLoading,
+    error: tvCreditsError,
+  } = api.people.getTVCredits.useQuery({ id: personID, }, { enabled: !!personID, })
 
   useEffect(() => {
     if (imgLoading && !isImageFullyLoaded) {
@@ -43,7 +51,9 @@ const PersonDetails = ({ personID, }: { personID: string }) => {
     }
   }, [imgLoading, isImageFullyLoaded])
 
-  if (isPersonDetailsLoading) {
+  const isAnyLoading = isPersonDetailsLoading || isMovieCreditsLoading || isTvCreditsLoading
+
+  if (isAnyLoading) {
     return (
       <div className='w-full h-full flex justify-center items-center min-h-screen'>
         <Spinner />
@@ -53,6 +63,14 @@ const PersonDetails = ({ personID, }: { personID: string }) => {
 
   if (personDetailsError) {
     return <div>Error loading person details: {personDetailsError.message}</div>
+  }
+
+  if (movieCreditsError) {
+    return <div>Error loading movie credits: {movieCreditsError.message}</div>
+  }
+
+  if (tvCreditsError) {
+    return <div>Error loading series credits: {tvCreditsError.message}</div>
   }
 
   return (

@@ -258,3 +258,22 @@ body {
   @apply max-w-[80rem];
   @apply px-5;
 }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  width: 4rem;
+  height: 4rem;
+  border: 4px solid #ddd;
+  border-top-color: #f59e0b; /* Tailwind yellow */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+

@@ -11,7 +11,6 @@ import Button from '~/components/Button/Button'
 import { api, } from '~/trpc/react'
 import { rockSalt, } from '~/fonts'
 
-// Spinner Component
 const Spinner = () => (
   <div className='w-full h-full flex flex-col items-center justify-center space-y-4 min-h-screen'>
     <div className='w-8 h-8 border-4 border-t-yellow-500 border-gray-200 rounded-full animate-spin' />
@@ -26,7 +25,7 @@ const EpisodeDetails = ({
 }: { seriesID: string, seasonNumber: string, episodeNumber: string }) => {
   const {
     data: seriesDetails,
-    isLoading,
+    isLoading: isSeriesDetailsLoading,
     error: seriesDetailsError,
   } = api.series.getDetails.useQuery(
     { id: seriesID, },
@@ -62,7 +61,7 @@ const EpisodeDetails = ({
 
   const [episodeImageError, setEpisodeImageError] = useState<boolean>(false)
 
-  const isAnyLoading = isLoading || isEpisodeDetailsLoading || isEpisodeCreditsLoading || isRatingLoading
+  const isAnyLoading = isSeriesDetailsLoading || isEpisodeDetailsLoading || isEpisodeCreditsLoading || isRatingLoading
 
   if (isAnyLoading) {
     return <Spinner />
@@ -70,6 +69,18 @@ const EpisodeDetails = ({
 
   if (seriesDetailsError) {
     return <div>Error loading series details: {seriesDetailsError.message}</div>
+  }
+
+  if (episodeDetailsError) {
+    return <div>Error loading episode details: {episodeDetailsError.message}</div>
+  }
+
+  if (episodeCreditsError) {
+    return <div>Error loading episode credits: {episodeCreditsError.message}</div>
+  }
+
+  if (ratingError) {
+    return <div>Error loading series rating: {ratingError.message}</div>
   }
 
   return (
@@ -124,7 +135,7 @@ const EpisodeDetails = ({
         <Carousel type='cast' data={[...episodeCredits?.cast ?? [], ...episodeCredits?.guest_stars ?? []]} />
       </div>
 
-      <div>
+      <div className='flex flex-col md:flex-row'>
         <Link href='/'>
           <Button variant='secondary' className='mt-8 mr-4'>Back to Search</Button>
         </Link>

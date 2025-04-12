@@ -40,7 +40,7 @@ const Person = ({ person, }: { person: TMDBPerson }) => {
         </div>
 
         <div className='mt-auto p-4 flex justify-center'>
-          <Button onClick={() => router.push(`/person/${person.id}`)}>View Details</Button>
+          <Button size='sm' onClick={() => router.push(`/person/${person.id}`)}>View Details</Button>
         </div>
       </div>
     </div>

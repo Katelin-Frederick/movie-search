@@ -5,8 +5,6 @@ const SeriesDetailsPage = async ({ params, }: {
 }) => {
   const { seriesID, } = await params
 
-  console.log('seriesID', seriesID)
-
   return (
     <div className='flex flex-col justify-center items-center'>
       <div className='container py-14'>

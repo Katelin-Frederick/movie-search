@@ -47,7 +47,7 @@ const Movie = ({ movie, }: { movie: TMDBMovie }) => {
         </div>
 
         <div className='mt-auto p-4 flex justify-center'>
-          <Button onClick={() => router.push(`/movie/${movie.id}`)}>View Details</Button>
+          <Button size='sm' onClick={() => router.push(`/movie/${movie.id}`)}>View Details</Button>
         </div>
       </div>
     </div>

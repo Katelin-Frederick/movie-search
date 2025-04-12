@@ -23,7 +23,7 @@ const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
 
   const {
     data: seriesDetails,
-    isLoading,
+    isLoading: isSeriesDetailsLoading,
     error: seriesDetailsError,
   } = api.series.getDetails.useQuery(
     { id: seriesID, },
@@ -50,7 +50,7 @@ const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
     { enabled: !!seriesID, }
   )
 
-  const isAnyLoading = isLoading || isRatingLoading || isSeasonDetailsLoading
+  const isAnyLoading = isSeriesDetailsLoading || isRatingLoading || isSeasonDetailsLoading
 
   if (isAnyLoading) {
     return <Spinner />
@@ -58,6 +58,14 @@ const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
 
   if (seriesDetailsError) {
     return <div>Error loading series details: {seriesDetailsError.message}</div>
+  }
+
+  if (ratingError) {
+    return <div>Error loading series rating: {ratingError.message}</div>
+  }
+
+  if (seasonDetailsError) {
+    return <div>Error loading season details: {seasonDetailsError.message}</div>
   }
 
   return (
@@ -157,7 +165,7 @@ const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
         ))}
       </TabView>
 
-      <div>
+      <div className='flex flex-col md:flex-row'>
         <Link href='/'>
           <Button variant='secondary' className='mt-8 mr-4'>Back to Search</Button>
         </Link>
