@@ -10,7 +10,7 @@ const Trending = () => {
   const LoadingSpinner = ({ text, }: { text?: string }) => (
     <div className='flex flex-col justify-center items-center mt-4'>
       <div className='w-8 h-8 border-4 border-t-yellow-500 border-gray-200 rounded-full animate-spin' />
-      {text && <span className='mt-2 text-yellow-500'>{text}</span>}
+      {text && <span className='mt-2'>{text}</span>}
     </div>
   )
 
@@ -37,6 +37,10 @@ const Trending = () => {
   )
 
   if (trendingMoviesError) return <div>Error: {trendingMoviesError.message} </div>
+
+  if (trendingSeriesError) return <div>Error: {trendingSeriesError.message} </div>
+
+  if (trendingPeopleError) return <div>Error: {trendingPeopleError.message} </div>
 
   return (
     <>

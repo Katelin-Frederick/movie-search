@@ -23,3 +23,5 @@ export type SearchValues = {
   searchValue: string
   year: string | null
 }
+
+export type DisplayType = 'movie' | 'tv' | 'person' | 'multi'

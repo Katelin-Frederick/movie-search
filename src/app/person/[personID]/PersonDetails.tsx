@@ -6,17 +6,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import Carousel from '~/components/Carousel/Carousel'
+import Spinner from '~/components/Spinner/Spinner'
 import Button from '~/components/Button/Button'
 import { formatDate, cn, } from '~/lib/utils'
 import { api, } from '~/trpc/react'
 import { rockSalt, } from '~/fonts'
-
-const Spinner = () => (
-  <div className='w-full h-full flex flex-col items-center justify-center space-y-4 min-h-screen'>
-    <div className='w-8 h-8 border-4 border-t-yellow-500 border-gray-200 rounded-full animate-spin'></div>
-    <span className='text-lg'>Loading...</span>
-  </div>
-)
 
 const PersonDetails = ({ personID, }: { personID: string }) => {
   const [imgError, setImgError] = useState(false)
@@ -119,7 +113,7 @@ const PersonDetails = ({ personID, }: { personID: string }) => {
             )}
 
             <li className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'>
-              <span className='font-bold'>Place of Birth:</span> {personDetails?.place_of_birth}
+              <span className='font-bold'>Place of Birth:</span> {personDetails?.place_of_birth === null ? 'N/A' : personDetails?.place_of_birth}
             </li>
 
             <li className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4 rounded-b-md'>

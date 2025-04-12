@@ -8,15 +8,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { formatRuntime, getSubtitle, formatDate, } from '~/lib/utils'
+import Spinner from '~/components/Spinner/Spinner'
 import Button from '~/components/Button/Button'
 import { api, } from '~/trpc/react'
-
-const Spinner = () => (
-  <div className='w-full h-full flex flex-col items-center justify-center space-y-4 min-h-screen'>
-    <div className='w-8 h-8 border-4 border-t-yellow-500 border-gray-200 rounded-full animate-spin' />
-    <span className='text-lg text-gray-600'>Loading...</span>
-  </div>
-)
 
 const SeasonsDetails = ({ seriesID, }: { seriesID: string }) => {
   const [hasError, setHasError] = useState(false)
