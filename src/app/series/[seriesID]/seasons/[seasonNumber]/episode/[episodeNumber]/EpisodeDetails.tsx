@@ -1,13 +1,23 @@
 'use client'
 
+import { ImageOff, } from 'lucide-react'
+import { useState, } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { formatRuntime, getSubtitle, getDirector, formatDate, getWriter, cn, } from '~/lib/utils'
 import Carousel from '~/components/Carousel/Carousel'
-import Poster from '~/components/Poster/Poster'
 import Button from '~/components/Button/Button'
 import { api, } from '~/trpc/react'
 import { rockSalt, } from '~/fonts'
+
+// Spinner Component
+const Spinner = () => (
+  <div className='w-full h-full flex flex-col items-center justify-center space-y-4 min-h-screen'>
+    <div className='w-8 h-8 border-4 border-t-yellow-500 border-gray-200 rounded-full animate-spin' />
+    <span className='text-lg text-gray-600'>Loading...</span>
+  </div>
+)
 
 const EpisodeDetails = ({
   seriesID,
@@ -16,8 +26,8 @@ const EpisodeDetails = ({
 }: { seriesID: string, seasonNumber: string, episodeNumber: string }) => {
   const {
     data: seriesDetails,
-    isLoading, error:
-    seriesDetailsError,
+    isLoading,
+    error: seriesDetailsError,
   } = api.series.getDetails.useQuery(
     { id: seriesID, },
     { enabled: !!seriesID, }
@@ -50,12 +60,16 @@ const EpisodeDetails = ({
     { enabled: !!seriesID, }
   )
 
-  if (isLoading) {
-    return <div>Loading...</div>
+  const [episodeImageError, setEpisodeImageError] = useState<boolean>(false)
+
+  const isAnyLoading = isLoading || isEpisodeDetailsLoading || isEpisodeCreditsLoading || isRatingLoading
+
+  if (isAnyLoading) {
+    return <Spinner />
   }
 
   if (seriesDetailsError) {
-    return <div>Error loading movie details: {seriesDetailsError.message}</div>
+    return <div>Error loading series details: {seriesDetailsError.message}</div>
   }
 
   return (
@@ -66,15 +80,28 @@ const EpisodeDetails = ({
       <h2 className='text-3xl mb-8 text-center md:text-left font-bold'>Episode</h2>
 
       <div className='flex flex-col md:flex-row'>
-        <div className='w-[300px] h-auto relative self-center md:self-start md:justify-start mb-8 md:mb-0 shrink-0'>
-          <Poster
-            src={`https://image.tmdb.org/t/p/w185/${episodeDetails?.still_path}`}
-            alt={episodeDetails?.name ?? ''}
-            fallbackMessage={`No Poster for ${seriesDetails?.name}`}
-            width={300}
-            height={300}
-            className='rounded-sm'
-          />
+        <div className='w-full md:w-[450px] h-auto relative self-center md:self-start md:justify-start mb-8 md:mb-0 shrink-0'>
+          {episodeImageError || !episodeDetails?.still_path ? (
+            <div className='absolute inset-0 flex items-center justify-center text-gray-300 text-sm px-2 text-center bg-gradient-to-br from-yellow-700 via-yellow-500 to-yellow-800'>
+              <div className='flex flex-col items-center'>
+                <ImageOff className='w-8 h-8 mb-2 text-gray-500' />
+                <span className='text-lg text-gray-800'>
+                  No Poster available for {episodeDetails?.name}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <Image
+              src={`https://image.tmdb.org/t/p/w500${episodeDetails?.still_path}`}
+              alt={episodeDetails?.name ?? 'Episode Poster'}
+              width={500}
+              height={750}
+              className='object-cover rounded-sm'
+              onError={() => setEpisodeImageError(true)}
+              loading='lazy'
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 450px'
+            />
+          )}
         </div>
 
         <div className='md:ml-6'>
@@ -91,24 +118,18 @@ const EpisodeDetails = ({
       </div>
 
       <div className='mt-12'>
-        <h2
-          className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
-        >
+        <h2 className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}>
           Cast
         </h2>
         <Carousel type='cast' data={[...episodeCredits?.cast ?? [], ...episodeCredits?.guest_stars ?? []]} />
       </div>
 
       <div>
-        <Link
-          href='/'
-        >
+        <Link href='/'>
           <Button variant='secondary' className='mt-8 mr-4'>Back to Search</Button>
         </Link>
 
-        <Link
-          href={`/series/${seriesID}/seasons`}
-        >
+        <Link href={`/series/${seriesID}/seasons`}>
           <Button className='mt-8'>Back to Season Details</Button>
         </Link>
       </div>

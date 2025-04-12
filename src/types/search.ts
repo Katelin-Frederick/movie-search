@@ -1,15 +1,17 @@
+export type TMDBSearchItem = {
+  id: number
+  title?: string
+  name?: string
+  media_type: 'movie' | 'tv' | 'person'
+  overview: string
+  release_date?: string
+  first_air_date?: string
+  poster_path?: string
+}
+
 export type TMDBSearchResult = {
   page: number
-  results: Array<{
-    id: number
-    title?: string
-    name?: string
-    media_type: string
-    overview: string
-    release_date?: string
-    first_air_date?: string
-    poster_path?: string
-  }>
+  results: Array<TMDBSearchItem>
   total_pages: number
   total_results: number
 }

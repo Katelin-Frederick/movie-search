@@ -1,5 +1,8 @@
 'use client'
 
+import { ImageOff, } from 'lucide-react'
+import { useState, } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import {
@@ -17,51 +20,43 @@ import {
 } from '~/lib/utils'
 import Carousel from '~/components/Carousel/Carousel'
 import Button from '~/components/Button/Button'
-import Poster from '~/components/Poster/Poster'
 import { api, } from '~/trpc/react'
 import { rockSalt, } from '~/fonts'
 
+const Spinner = () => (
+  <div className='w-full h-full flex flex-col items-center justify-center space-y-4 min-h-screen'>
+    <div className='w-8 h-8 border-4 border-t-yellow-500 border-gray-200 rounded-full animate-spin' />
+    <span className='text-lg text-gray-600'>Loading...</span>
+  </div>
+)
+
 const MovieDetails = ({ movieID, }: { movieID: string }) => {
+  const [hasImageError, setHasImageError] = useState(false)
+
   const {
     data: movieDetails,
     isLoading: isMovieDetailsLoading,
     error: movieDetailsError,
-  } = api.movies.getDetails.useQuery(
-    { id: movieID, },
-    { enabled: !!movieID, }
-  )
+  } = api.movies.getDetails.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
   const {
     data: rating,
     isLoading: isRatingLoading,
-    error: ratingError,
-  } = api.movies.getRating.useQuery(
-    { id: movieID, },
-    { enabled: !!movieID, }
-  )
+  } = api.movies.getRating.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
   const {
     data: credits,
     isLoading: isCreditsLoading,
-    error: creditsError,
-  } = api.movies.getCredits.useQuery(
-    { id: movieID, },
-    { enabled: !!movieID, }
-  )
+  } = api.movies.getCredits.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
   const {
     data: providers,
     isLoading: isProvidersLoading,
-    error: providersError,
-  } = api.movies.getProviders.useQuery(
-    { id: movieID, },
-    { enabled: !!movieID, }
-  )
+  } = api.movies.getProviders.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
   const {
     data: collection,
     isLoading: isCollectionLoading,
-    error: collectionError,
   } = api.movies.getCollection.useQuery(
     { collectionId: movieDetails?.belongs_to_collection?.id ?? null, },
     { enabled: !!movieID, }
@@ -70,29 +65,23 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
   const {
     data: similar,
     isLoading: isSimilarLoading,
-    error: SimilarError,
-  } = api.movies.getSimilar.useQuery(
-    { id: movieID, },
-    { enabled: !!movieID, }
-  )
+  } = api.movies.getSimilar.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
   const {
     data: recommended,
     isLoading: isRecommendedLoading,
-    error: RecommendedError,
-  } = api.movies.getRecommended.useQuery(
-    { id: movieID, },
-    { enabled: !!movieID, }
-  )
+  } = api.movies.getRecommended.useQuery({ id: movieID, }, { enabled: !!movieID, })
 
-  if (isMovieDetailsLoading
+  const isAnyLoading
+    = isMovieDetailsLoading
     || isRatingLoading
     || isCreditsLoading
     || isProvidersLoading
     || isCollectionLoading
     || isRecommendedLoading
-  ) {
-    return <div>Loading...</div>
+
+  if (isAnyLoading) {
+    return <Spinner />
   }
 
   if (movieDetailsError) {
@@ -101,75 +90,77 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
 
   return (
     <div>
-      <h1 className='text-3xl md:text-4xl lg:text-5xl mb-3 text-center md:text-left font-bold'>{movieDetails?.title}</h1>
-      <p className='mb-3 text-center md:text-left'>{getSubtitle('movie', rating ?? 'N/A')}</p>
+      <h1 className='text-3xl md:text-4xl lg:text-5xl mb-3 text-center md:text-left font-bold'>
+        {movieDetails?.title}
+      </h1>
+      <p className='mb-3 text-center md:text-left'>
+        {getSubtitle('movie', rating ?? 'N/A')}
+      </p>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12'>
+        {/* Poster */}
         <div className='flex justify-start items-center md:items-start flex-col'>
-          <div className='max-w-[350px] w-full relative'>
-            <Poster
-              src={`https://image.tmdb.org/t/p/w185/${movieDetails?.poster_path}`}
-              alt={movieDetails?.title ?? ''}
-              fallbackMessage={`No Poster for ${movieDetails?.title}`}
-              width={300}
-              height={200}
-              className='rounded-sm'
-            />
+          <div className='relative w-full max-w-[350px] aspect-[2/3] bg-gradient-to-br from-yellow-700 via-yellow-500 to-yellow-800 rounded-sm overflow-hidden'>
+            {hasImageError || !movieDetails?.poster_path ? (
+              <div className='absolute inset-0 flex items-center justify-center text-gray-300 text-sm px-2 text-center'>
+                <div className='flex flex-col items-center'>
+                  <ImageOff className='w-10 h-10 mb-2 text-gray-500' />
+                  <span className='text-lg text-gray-800'>
+                    No image available for {movieDetails?.title}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <Image
+                src={`https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`}
+                alt={movieDetails.title ?? ''}
+                fill
+                className='object-cover transition-opacity duration-500'
+                onError={() => setHasImageError(true)}
+              />
+            )}
           </div>
         </div>
 
+        {/* Info List */}
         <div className='flex justify-center items-start my-12 md:my-0'>
           <ul>
-            <li
-              className='bg-gray-800 border-2 border-gray-100 p-4 rounded-t-md'
-            >
-              <span className='font-bold'>Released:</span> {formatDate(movieDetails?.release_date ?? '')}
+            <li className='bg-gray-800 border-2 border-gray-100 p-4 rounded-t-md'>
+              <span className='font-bold'>Released:</span>{' '}
+              {formatDate(movieDetails?.release_date ?? '')}
             </li>
-
-            <li
-              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
-            >
-              <span className='font-bold'>Runtime:</span> {formatRuntime(movieDetails?.runtime ?? 0)}
+            <li className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'>
+              <span className='font-bold'>Runtime:</span>{' '}
+              {formatRuntime(movieDetails?.runtime ?? 0)}
             </li>
-
-            <li
-              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
-            >
-              <span className='font-bold'>Director:</span> {getDirector(credits?.crew ?? [])}
+            <li className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'>
+              <span className='font-bold'>Director:</span>{' '}
+              {getDirector(credits?.crew ?? [])}
             </li>
-
-            <li
-              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
-            >
-              <span className='font-bold'>Writen By:</span> {getWriter(credits?.crew ?? [])}
+            <li className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'>
+              <span className='font-bold'>Written By:</span>{' '}
+              {getWriter(credits?.crew ?? [])}
             </li>
-
-            <li
-              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
-            >
-              <span className='font-bold'>Languages:</span> {getLanguages(movieDetails?.spoken_languages ?? [])}
+            <li className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'>
+              <span className='font-bold'>Languages:</span>{' '}
+              {getLanguages(movieDetails?.spoken_languages ?? [])}
             </li>
-
-            <li
-              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
-            >
-              <span className='font-bold'>Budget:</span> {formatMoney(movieDetails?.budget ?? 0)}
+            <li className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'>
+              <span className='font-bold'>Budget:</span>{' '}
+              {formatMoney(movieDetails?.budget ?? 0)}
             </li>
-
-            <li
-              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'
-            >
-              <span className='font-bold'>Revenue:</span> {formatMoney(movieDetails?.revenue ?? 0)}
+            <li className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4'>
+              <span className='font-bold'>Revenue:</span>{' '}
+              {formatMoney(movieDetails?.revenue ?? 0)}
             </li>
-
-            <li
-              className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4 rounded-b-md'
-            >
-              <span className='font-bold'>Status:</span> {movieDetails?.status}
+            <li className='bg-gray-800 border-2 border-t-0 border-gray-100 p-4 rounded-b-md'>
+              <span className='font-bold'>Status:</span>{' '}
+              {movieDetails?.status}
             </li>
           </ul>
         </div>
 
+        {/* Genres and Plot */}
         <div className='md:col-span-2 lg:col-span-1'>
           <div className='flex flex-wrap max-w-[350px] justify-center items-center mb-4 w-full'>
             {movieDetails?.genres.map((genre) => (
@@ -188,10 +179,9 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
           <h2 className='text-3xl mt-5'>Tagline:</h2>
           <p>{movieDetails?.tagline}</p>
 
-          {movieDetails?.homepage !== '' && (
+          {movieDetails?.homepage && (
             <>
               <h2 className='text-3xl mt-5'>Website:</h2>
-
               <a
                 href={movieDetails?.homepage}
                 target='_blank'
@@ -205,15 +195,10 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
 
           <div className={cn(providers && 'flex flex-wrap')}>
             {providers && (
-              <a
-                href={providers}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
+              <a href={providers} target='_blank' rel='noopener noreferrer'>
                 <Button className='mt-8 mr-4'>Where to Watch</Button>
               </a>
             )}
-
             <a
               href={`http://imdb.com/title/${movieDetails?.imdb_id}`}
               target='_blank'
@@ -225,68 +210,57 @@ const MovieDetails = ({ movieID, }: { movieID: string }) => {
         </div>
       </div>
 
+      {/* Production Info */}
       <h2 className='text-3xl'>Production Information:</h2>
       <p className='my-3'>
-        <span className='font-bold'>Producers:</span> {getProducer(credits?.crew ?? [])}
+        <span className='font-bold'>Producers:</span>{' '}
+        {getProducer(credits?.crew ?? [])}
       </p>
       <p className='my-3'>
-        <span className='font-bold'>Production Companies:</span> {getProductionCompanies(movieDetails?.production_companies ?? [])}
+        <span className='font-bold'>Production Companies:</span>{' '}
+        {getProductionCompanies(movieDetails?.production_companies ?? [])}
       </p>
       <p className='my-3'>
-        <span className='font-bold'>Production Countries:</span> {getProductionCountries(movieDetails?.production_countries ?? [])}
+        <span className='font-bold'>Production Countries:</span>{' '}
+        {getProductionCountries(movieDetails?.production_countries ?? [])}
       </p>
 
+      {/* Carousels */}
       <div className='mt-12'>
-        <h2
-          className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
-        >
-          Cast
-        </h2>
+        <h2 className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}>Cast</h2>
         <Carousel type='cast' data={credits?.cast ?? []} />
       </div>
 
-      {collection !== null && (
+      {collection && (
         <div className='mt-12'>
-          <h2
-            className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
-          >
-            {collection?.name}
+          <h2 className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}>
+            {collection.name}
           </h2>
-
-          <p className='mb-4'>{collection?.overview}</p>
-
-          <Carousel data={collection?.parts ?? []} />
+          <p className='mb-4'>{collection.overview}</p>
+          <Carousel data={collection.parts ?? []} />
         </div>
       )}
 
-      {similar?.results && similar.results.length > 0 && (
+      {(similar?.results?.length ?? 0) > 0 && (
         <div className='mt-12'>
-          <h2
-            className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
-          >
-            Similar
-          </h2>
-
+          <h2 className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}>Similar</h2>
           <Carousel data={similar?.results ?? []} />
         </div>
       )}
 
-      {recommended?.results && recommended.results.length > 0 && (
+      {(recommended?.results?.length ?? 0) > 0 && (
         <div className='mt-12'>
-          <h2
-            className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}
-          >
+          <h2 className={cn('text-2xl text-yellow-500 mb-5', rockSalt.className)}>
             Recommended
           </h2>
-
           <Carousel data={recommended?.results ?? []} />
         </div>
       )}
 
-      <Link
-        href='/'
-      >
-        <Button variant='secondary' className='mt-8'>Back to Search</Button>
+      <Link href='/'>
+        <Button variant='secondary' className='mt-8'>
+          Back to Search
+        </Button>
       </Link>
     </div>
   )

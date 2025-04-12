@@ -7,6 +7,12 @@ import TrendingPeople from './people'
 import TrendingSeries from './series'
 
 const Trending = () => {
+  const LoadingSpinner = ({ text, }: { text?: string }) => (
+    <div className='flex flex-col justify-center items-center mt-4'>
+      <div className='w-8 h-8 border-4 border-t-yellow-500 border-gray-200 rounded-full animate-spin' />
+      {text && <span className='mt-2 text-yellow-500'>{text}</span>}
+    </div>
+  )
 
   const {
     data: trendingMovies,
@@ -26,7 +32,10 @@ const Trending = () => {
     error: trendingPeopleError,
   } = api.people.getTrending.useQuery()
 
-  if (isLoadingTrendingMovies || isLoadingTrendingSeries || isLoadingTrendingPeople) return <div>Loading...</div>
+  if (isLoadingTrendingMovies || isLoadingTrendingSeries || isLoadingTrendingPeople) return (
+    <LoadingSpinner text='Loading...' />
+  )
+
   if (trendingMoviesError) return <div>Error: {trendingMoviesError.message} </div>
 
   return (
