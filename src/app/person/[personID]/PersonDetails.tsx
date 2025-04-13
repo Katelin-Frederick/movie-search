@@ -73,9 +73,9 @@ const PersonDetails = ({ personID, }: { personID: string }) => {
         {personDetails?.name}
       </h1>
 
-      <div className='grid grid-cols-[300px_1fr] gap-6 mb-12'>
+      <div className='grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 mb-12'>
         <div className='flex flex-col items-center md:items-start'>
-          <div className='w-full relative aspect-[2/3]'>
+          <div className='w-full max-w-[240px] sm:max-w-[300px] mx-auto md:mx-0 relative aspect-[2/3]'>
             {imgLoading && !isImageFullyLoaded && <Spinner />}
             {!imgError ? (
               <Image

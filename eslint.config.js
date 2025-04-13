@@ -54,7 +54,7 @@ export default tseslint.config(
         { checksVoidReturn: { attributes: false } },
       ],
       'perfectionist/sort-imports': [
-        'warn',
+        'error',
         {
           'type': 'line-length',
           'order': 'desc',
@@ -63,7 +63,7 @@ export default tseslint.config(
         }
       ],
       'perfectionist/sort-interfaces': [
-        'warn',
+        'error',
         {
           'type': 'line-length',
           'order': 'desc',
@@ -71,7 +71,7 @@ export default tseslint.config(
         }
       ],
       'perfectionist/sort-intersection-types': [
-        'warn',
+        'error',
         {
           'type': 'line-length',
           'order': 'desc',
@@ -79,7 +79,7 @@ export default tseslint.config(
         }
       ],
       'perfectionist/sort-named-imports': [
-        'warn',
+        'error',
         {
           'type': 'line-length',
           'order': 'desc',
@@ -112,10 +112,9 @@ export default tseslint.config(
         'single'
       ],
       'stylistic/max-len': [
-        2,
-        140,
-        2,
+        'warn',
         {
+          'code': 140,
           'ignoreUrls': true,
           'ignoreStrings': true,
           'ignoreTemplateLiterals': true,
